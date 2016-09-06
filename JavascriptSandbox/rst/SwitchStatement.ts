@@ -64,7 +64,7 @@ class SwitchStatement extends RstNode {
 				runtime.regs [this.rNodeState] = RstNodeState.Finished;
 			}
 		} else if ( runtime.regs [this.rState] === SwitchStatementState.EvalNextTest ) {
-			var caseIdx = runtime.regs [this.rCaseIdx];
+			var caseIdx = <number> runtime.regs [this.rCaseIdx];
 
 			if ( caseIdx >= this.cases.length ) {
 				if ( this.defaultCaseIdx !== -1 ) {

@@ -769,9 +769,8 @@ window.addEventListener ( 'load', function () {
 						.split ( ' ' )
 						.map ( className => 'cm-s-' + className )
 						.join ( ' ' ),
-						curLineElt = <HTMLElement> lineElts [1].cloneNode ( true ),
-						codeElt = document.createElement ( 'div' );
-
+						curLineElt = <HTMLElement> lineElts [1].cloneNode ( true );
+					codeElt = document.createElement ( 'div' );
 					codeElt.className = cmThemeClassName + ' console-executed-code';
 					codeElt.appendChild ( curLineElt );
 				} else {	// Fallback to non-highlighted text.

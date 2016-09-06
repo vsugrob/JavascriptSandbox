@@ -57,7 +57,7 @@ class RstNode {
 	public parent : RstNode = null;
 	public parentProperty : string = null;
 	public loc : SourceLocation;
-	public get type () { return	<string> this ['constructor'].type; }
+	public get type () { return	<string> this ['constructor']['type']; }
 	public precedence = null;	// Most of the nodes has no precedence.
 
 	public get isAtLeftHandSide () {
@@ -94,7 +94,7 @@ class RstNode {
 	}
 
 	public get programNode () {
-		var node = this;
+		var node = <RstNode> this;
 
 		while ( node !== null && !( node instanceof Program ) ) {
 			node = node.parent;

@@ -571,7 +571,7 @@ interface IOutArg {
 
 		try {
 			// TODO: prohibit return statement when code executed in root scope
-			var guestCodeFunc = new FunctionCtor (
+			guestCodeFunc = new FunctionCtor (
 				'"use strict";' + "\n" +
 				'var self = this;' + "\n" +
 				'var console = this.console;' + "\n" +
@@ -830,7 +830,7 @@ interface IOutArg {
 		var toughGlobals : string [] = [];
 		
 		for ( var i = 0 ; i < globals.length ; i++ ) {
-			var k = globals [i];
+			k = globals [i];
 
 			if ( -1 !== allowedIdentifiers.indexOf ( k ) || k === 'self' )
 				continue;
