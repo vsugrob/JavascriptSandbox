@@ -22,7 +22,7 @@ class FunctionNode extends ScopeNode {
 	private runtimeParamNames : string [] = [];
 	public funcNodeId : number;
 	public programId : number;
-	public isAnonymous : bool;
+	public isAnonymous : boolean;
 	public get defFuncVarInBody () { return	this.type === FunctionExpression.type && !this.isAnonymous; }
 	private factoryFunc : Function = null;
 

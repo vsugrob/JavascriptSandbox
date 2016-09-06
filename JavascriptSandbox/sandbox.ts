@@ -189,7 +189,7 @@ class Sandbox {
 		this.on ( Sandbox.DirEvent, callback );
 	}
 
-	public onExecFinished ( callback : ( success : bool, storedResultId : number, error : any ) => void ) {
+	public onExecFinished ( callback : ( success : boolean, storedResultId : number, error : any ) => void ) {
 		this.on ( Sandbox.ExecFinishedEvent, callback );
 	}
 
@@ -422,9 +422,9 @@ class Sandbox {
 	/* NOTE: when 'props' argument is null it means that properties of
 	 * object obtained by path should be reflected. If its values is empty array
 	 * then properties should be reflected but not expanded. */
-	public reflect ( path : string [], props : ReflectByTreeQueryNode [], scanInherited : bool,
+	public reflect ( path : string [], props : ReflectByTreeQueryNode [], scanInherited : boolean,
 		done : ( reflectedObject : ReflectedValue,
-			path : string [], props : ReflectByTreeQueryNode [], scanInherited : bool, userData : any ) => void,
+			path : string [], props : ReflectByTreeQueryNode [], scanInherited : boolean, userData : any ) => void,
 		fail? : RequestFailCallback, always? : RequestAlwaysCallback,
 		userData? : any, timeout? : number )
 	{

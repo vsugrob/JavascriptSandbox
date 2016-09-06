@@ -25,7 +25,7 @@ class System {
 		ctor.prototype = pNew;
 	}
 
-	public static assert ( condition : bool, message? : string ) {
+	public static assert ( condition : boolean, message? : string ) {
 		if ( !condition )
 			throw new Error ( message );
 	}

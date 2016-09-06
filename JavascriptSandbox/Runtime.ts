@@ -388,7 +388,7 @@ class Runtime {
 	 * therefore it can be used only when current frame is correct.
 	 * Look every call site using this method, make sure current stack frame
 	 * is correct for those calls. */
-	public updateVar ( name : string, operator : string, prefix : bool ) {
+	public updateVar ( name : string, operator : string, prefix : boolean ) {
 		name = Runtime.builtin.String ( name );
 		var scope = this.lookupContainingScope ( name );
 
@@ -697,7 +697,7 @@ class Runtime {
 	// Make it available to scope-control code.
 	public calcInOp = Runtime.calcInOp;
 
-	public static calcUpdate ( operator : string, value : any, prefix : bool ) {
+	public static calcUpdate ( operator : string, value : any, prefix : boolean ) {
 		var res = <CalcUpdateResult> Runtime.builtin.create ( null );
 
 			 if ( operator === '++' ) res.result = prefix ? ++value : value++;
@@ -851,7 +851,7 @@ class Runtime {
 		return	programNode;
 	}
 
-	public evalCode ( code : string, isDirect : bool ) {
+	public evalCode ( code : string, isDirect : boolean ) {
 		var programNode = this.createEvalProgram ( code, isDirect );
 		this.nextNode = programNode;
 	}
@@ -977,9 +977,9 @@ class Runtime {
 
 	public static defineValue ( o : any, p : string,
 		value? : any,	// Optional, attributes can be changed without redefining value.
-		configurable? : bool,
-		enumerable? : bool,
-		writable? : bool )
+		configurable? : boolean,
+		enumerable? : boolean,
+		writable? : boolean )
 	{
 		var attrs = Runtime.builtin.create ( null );
 
@@ -1000,8 +1000,8 @@ class Runtime {
 
 	public static defineGetter ( o : any, p : string,
 		get? : () => any,	// Optional, attributes can be changed without redefining accessor.
-		configurable? : bool,
-		enumerable? : bool )
+		configurable? : boolean,
+		enumerable? : boolean )
 	{
 		var attrs = Runtime.builtin.create ( null );
 
@@ -1019,8 +1019,8 @@ class Runtime {
 
 	public static defineSetter ( o : any, p : string,
 		set? : ( v : any ) => void,	// Optional, attributes can be changed without redefining accessor.
-		configurable? : bool,
-		enumerable? : bool )
+		configurable? : boolean,
+		enumerable? : boolean )
 	{
 		var attrs = Runtime.builtin.create ( null );
 
@@ -1081,7 +1081,7 @@ class Runtime {
 		);
 	}
 
-	public throwInvalidLHSInUpdate ( prefix : bool ) {
+	public throwInvalidLHSInUpdate ( prefix : boolean ) {
 		this.throwInvalidLHS ( ( prefix ? 'prefix' : 'postfix' ) + ' operation' );
 	}
 

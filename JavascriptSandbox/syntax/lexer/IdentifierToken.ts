@@ -8,7 +8,7 @@ interface IdKindMap {
 
 class IdentifierToken implements Token {
 	// This flag is updated whenever IdentifierToken.readValue () called.
-	public static hasEscapeSeqs : bool;
+	public static hasEscapeSeqs : boolean;
 	public type : TokenType;
 
 	constructor (

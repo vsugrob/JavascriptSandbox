@@ -2,7 +2,7 @@
 
 class Literal extends RstNode {
 	public static get type () { return	'Literal'; }
-	public isRegex : bool;
+	public isRegex : boolean;
 	private regexPattern : string;
 	private regexFlags : string;
 

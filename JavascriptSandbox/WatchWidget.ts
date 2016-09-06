@@ -22,7 +22,7 @@ class WatchWidget {
 	public get pathRoot () { return	this._pathRoot; }
 	private _autoUpdate = false;
 	public get autoUpdate () { return	this._autoUpdate; }
-	public set autoUpdate ( value : bool ) {
+	public set autoUpdate ( value : boolean ) {
 		value = !!value;
 
 		if ( this._autoUpdate === value )
@@ -48,7 +48,7 @@ class WatchWidget {
 	private rootValue : ReflectedValue = null;
 	private errorElement : HTMLElement = null;
 	public get isEnabled () { return	!this._rootElement.classList.contains ( 'element-disabled' ); }
-	public set isEnabled ( value : bool ) {
+	public set isEnabled ( value : boolean ) {
 		value = !!value;
 
 		if ( value && this._sandbox.isTerminated )
@@ -119,7 +119,7 @@ class WatchWidget {
 
 		this._sandbox.reflect ( path, this._isInitiallyOpen ? [] : null, false,
 			function ( reflectedObject : ReflectedValue,
-				path : string [], props : ReflectByTreeQueryNode [], scanInherited : bool )
+				path : string [], props : ReflectByTreeQueryNode [], scanInherited : boolean )
 			{
 				this.rootValue = reflectedObject;
 				var eWatch = this.renderWatch ( reflectedObject, this._isInitiallyOpen, this._label );
@@ -140,7 +140,7 @@ class WatchWidget {
 
 		this._sandbox.reflect ( reflectedValue.path, treeQuery.props, false,
 			function ( reflectedObject : ReflectedValue,
-				path : string [], props : ReflectByTreeQueryNode [], scanInherited : bool, valueBeingUpdated : ReflectedValue )
+				path : string [], props : ReflectByTreeQueryNode [], scanInherited : boolean, valueBeingUpdated : ReflectedValue )
 			{
 				this.updateReflectedValueRecursively ( valueBeingUpdated, reflectedObject );
 				valueBeingUpdated ['eWatch']['wasExpanded'] = true;
@@ -340,7 +340,7 @@ class WatchWidget {
 			e.classList.remove ( className );
 	}
 
-	private static setClassEnabled ( e : HTMLElement, className : string, enabled : bool ) {
+	private static setClassEnabled ( e : HTMLElement, className : string, enabled : boolean ) {
 		if ( enabled )
 			WatchWidget.enableClass ( e, className );
 		else
@@ -634,7 +634,7 @@ class WatchWidget {
 		return	eType;
 	}
 
-	private renderWatch ( reflectedValue : ReflectedValue, isOpen : bool, label? : string ) {
+	private renderWatch ( reflectedValue : ReflectedValue, isOpen : boolean, label? : string ) {
 		var eWatch = document.createElement ( 'div' );
 		eWatch.className = 'watch ' + ( isOpen ? 'watch-open' : 'watch-closed' );
 		eWatch ['reflectedValue'] = reflectedValue;

@@ -10,13 +10,13 @@ enum UpdateState {
 class UpdateExpression extends RstNode {
 	public static get type () { return	'UpdateExpression'; }
 	public argument : RstNode;
-	public isValid : bool;
+	public isValid : boolean;
 	public get argumentIsIdentifier () { return	this.argument.type === Identifier.type; }
 	public precedence = 3;
 
 	private rState : number;
 
-	constructor ( public operator : string, argument : RstNode, public prefix : bool, loc? : SourceLocation ) {
+	constructor ( public operator : string, argument : RstNode, public prefix : boolean, loc? : SourceLocation ) {
 		super ( loc );
 		this.rState = RstNode.maxRegisterId++;
 		this.linkChild ( argument, 'argument' );

@@ -10,7 +10,7 @@ function pushUnique ( arr : any [], value : any ) {
 	return	false;
 }
 
-function walkObject ( parent : any, id : string, predicate : ( o : any, id : string, fullId : string [] ) => bool,
+function walkObject ( parent : any, id : string, predicate : ( o : any, id : string, fullId : string [] ) => boolean,
 	ancestors? : any [], path? : string [] )
 {
 	var o : any;

@@ -4,11 +4,11 @@
 interface ParamNameHashSet {
 	/** @param safeName is param name prepended with single space character
 	  * which prevents it from collision with '__proto__'. */
-	[safeName : string] : bool;
+	[safeName : string] : boolean;
 }
 
 class FunctionParser {
-	public static parseFunction ( parser : Parser, isExpression : bool ) {
+	public static parseFunction ( parser : Parser, isExpression : boolean ) {
 		if ( Parser.DEBUG )
 			System.assert ( IdentifierToken.matchKeyword ( parser.lexer.token, 'function' ) );
 
@@ -64,7 +64,7 @@ class FunctionParser {
 	// Parse code like '( arg1, ..., argN ) { <function body> }'.
 	public static parserHeadlessFunction ( parser : Parser,
 		idExpr : any, funcIdToken : any,
-		isExpression : bool, locStart? : SourcePosition )
+		isExpression : boolean, locStart? : SourcePosition )
 	{
 		if ( Parser.DEBUG )
 			System.assert ( PunctuatorToken.match ( parser.lexer.token, Punctuator.LParen ) );

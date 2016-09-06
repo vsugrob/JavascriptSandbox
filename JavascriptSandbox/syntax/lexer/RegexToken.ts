@@ -2,7 +2,7 @@
 'use strict';
 
 interface RegexPrecedingWordMap {
-	[reservedWord : string] : bool;
+	[reservedWord : string] : boolean;
 }
 
 class RegexToken implements Token {

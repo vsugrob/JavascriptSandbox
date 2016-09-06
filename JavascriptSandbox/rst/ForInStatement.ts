@@ -12,7 +12,7 @@ class ForInStatement extends RstNode {
 	public left : RstNode;
 	public right : RstNode;
 	public body : RstNode;
-	public isValid : bool;
+	public isValid : boolean;
 
 	private rState : number;
 	private rKeys : number;
@@ -20,7 +20,7 @@ class ForInStatement extends RstNode {
 	private rKey : number;
 
 	// TODO: implement isForEach.
-	constructor ( left : RstNode, right : RstNode, body : RstNode, public isForEach : bool, loc? : SourceLocation ) {
+	constructor ( left : RstNode, right : RstNode, body : RstNode, public isForEach : boolean, loc? : SourceLocation ) {
 		super ( loc );
 		this.rState = RstNode.maxRegisterId++;
 		this.rKeys = RstNode.maxRegisterId++;

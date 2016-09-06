@@ -24,9 +24,9 @@ interface FunctionAstNode extends AstNode {
     body : AstNode;	// Actually it can be BlockStatementAstNode or ExpressionAstNode.
 	/* true when this function contains a yield expression
 	 * in its body (other than in a nested function). */
-    generator : bool;
+    generator : boolean;
 	// true when the function is an expression closure and the body field is an expression.
-    expression : bool;
+    expression : boolean;
 }
 
 /* Statements:
@@ -71,7 +71,7 @@ interface SwitchStatementAstNode extends StatementAstNode {
 	/* Flag indicating whether the switch statement
 	 * contains any unnested let declarations
 	 * (and therefore introduces a new lexical scope). */
-    lexical : bool;
+    lexical : boolean;
 }
 
 interface ReturnStatementAstNode extends StatementAstNode {
@@ -111,7 +111,7 @@ interface ForInStatementAstNode extends StatementAstNode {
     right : ExpressionAstNode;
     body : StatementAstNode;
 	// If true, then this is for-each statement.
-    each : bool;
+    each : boolean;
 }
 
 interface ForOfStatementAstNode extends StatementAstNode {
@@ -139,9 +139,9 @@ interface FunctionDeclarationAstNode extends FunctionAstNode, DeclarationAstNode
     body : AstNode;	// Actually it can be BlockStatementAstNode or ExpressionAstNode.
 	/* true when this function contains a yield expression
 	 * in its body (other than in a nested function). */
-    generator : bool;
+    generator : boolean;
 	// true when the function is an expression closure and the body field is an expression.
-    expression : bool;
+    expression : boolean;
 }
 
 interface VariableDeclarationAstNode extends DeclarationAstNode {
@@ -174,9 +174,9 @@ interface FunctionExpressionAstNode extends FunctionAstNode, ExpressionAstNode {
     body : AstNode;	// Actually it can be BlockStatementAstNode or ExpressionAstNode.
 	/* true when this function contains a yield expression
 	 * in its body (other than in a nested function). */
-    generator : bool;
+    generator : boolean;
 	// true when the function is an expression closure and the body field is an expression.
-    expression : bool;
+    expression : boolean;
 }
 
 interface ArrowExpressionAstNode extends FunctionAstNode, ExpressionAstNode {
@@ -186,9 +186,9 @@ interface ArrowExpressionAstNode extends FunctionAstNode, ExpressionAstNode {
     body : AstNode;	// Actually it can be BlockStatementAstNode or ExpressionAstNode.
 	/* true when this function contains a yield expression
 	 * in its body (other than in a nested function). */
-    generator : bool;
+    generator : boolean;
 	// true when the function is an expression closure and the body field is an expression.
-    expression : bool;
+    expression : boolean;
 }
 
 interface SequenceExpressionAstNode extends ExpressionAstNode {
@@ -197,7 +197,7 @@ interface SequenceExpressionAstNode extends ExpressionAstNode {
 
 interface UnaryExpressionAstNode extends ExpressionAstNode {
     operator : string;	// Can be "-" | "+" | "!" | "~" | "typeof" | "void" | "delete".
-    prefix : bool;
+    prefix : boolean;
     argument : ExpressionAstNode;
 }
 
@@ -221,7 +221,7 @@ interface AssignmentExpressionAstNode extends ExpressionAstNode {
 interface UpdateExpressionAstNode extends ExpressionAstNode {
     operator : string;	// Can be "++" | "--".
     argument : ExpressionAstNode;
-    prefix : bool;
+    prefix : boolean;
 }
 
 interface LogicalExpressionAstNode extends ExpressionAstNode {
@@ -252,7 +252,7 @@ interface MemberExpressionAstNode extends ExpressionAstNode {
 	/* If computed === true, the node corresponds to a computed e1[e2] expression
 	 * and property is an ExpressionAstNode. If computed === false, the node corresponds to
 	 * a static e1.x expression and property is an IdentifierAstNode. */
-    computed : bool;
+    computed : boolean;
 }
 
 interface YieldExpressionAstNode extends ExpressionAstNode {
@@ -316,7 +316,7 @@ interface CatchClauseAstNode extends AstNode {
 interface ComprehensionBlockAstNode extends AstNode {
     left : PatternAstNode;
     right : ExpressionAstNode;
-    each : bool;
+    each : boolean;
 }
 
 /* Miscellaneous:

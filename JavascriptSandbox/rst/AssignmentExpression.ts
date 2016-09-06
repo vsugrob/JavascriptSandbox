@@ -13,7 +13,7 @@ class AssignmentExpression extends RstNode {
 	public left : RstNode;
 	public right : RstNode;
 	public binOperator : string;
-	public isValid : bool;
+	public isValid : boolean;
 	public get isCompoundAssignment () { return	this.operator !== '='; }
 	public get leftIsIdentifier () { return	this.left.type === Identifier.type; }
 	public precedence = 17;

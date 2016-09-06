@@ -878,7 +878,7 @@ window.addEventListener ( 'load', function () {
 			var watchWidget = new WatchWidget ( sandbox, storedObjectId + '', true, false );
 			guestLogElt.appendChild ( watchWidget.rootElement );
 		} );
-		sandbox.onExecFinished ( function ( success : bool, storedResultId : number, error : any ) {
+		sandbox.onExecFinished ( function ( success : boolean, storedResultId : number, error : any ) {
 			// DEBUG. In future every exec operation must do its stuff with result in its own callback.
 			//if ( !success )
 			//	logWrite ( 'onExecFinished< ' + error + '\n' );

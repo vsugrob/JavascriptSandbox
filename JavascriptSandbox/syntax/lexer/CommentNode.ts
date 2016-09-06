@@ -5,7 +5,7 @@ class CommentNode {
 	constructor (
 		// Block comment when true: '/*text*/'.
 		// Single line comment when false : '//text'.
-		public isBlockComment : bool,
+		public isBlockComment : boolean,
 		public text : string,
 		public loc : SourceLocation
 	) {}

@@ -23,11 +23,11 @@ interface ReflectedProperty {
 interface ReflectedValue {
 	parentProperty : ReflectedProperty;
 	value : string;
-	success : bool;
-	hasCustomStringRepr : bool;
+	success : boolean;
+	hasCustomStringRepr : boolean;
 	type : ReflectedType;
 	path : string [];
-	hasProperties : bool;
+	hasProperties : boolean;
 	properties : ReflectedProperty [];
 }
 

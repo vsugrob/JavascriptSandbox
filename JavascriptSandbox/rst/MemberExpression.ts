@@ -28,7 +28,7 @@ class MemberExpression extends RstNode {
 	private rState : number;
 	public rPurpose : number;	// Is to be set from outside.
 
-	constructor ( object : RstNode, property : RstNode, public computed : bool, loc? : SourceLocation ) {
+	constructor ( object : RstNode, property : RstNode, public computed : boolean, loc? : SourceLocation ) {
 		super ( loc );
 		this.rState = RstNode.maxRegisterId++;
 		this.rPurpose = RstNode.maxRegisterId++;

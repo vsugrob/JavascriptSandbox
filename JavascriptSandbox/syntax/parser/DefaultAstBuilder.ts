@@ -54,7 +54,7 @@ class DefaultAstBuilder implements AstBuilder {
 		};
 	}
 
-	public switchStatement ( disc : any, cases : any [], isLexical : bool, loc? : SourceLocation ) {
+	public switchStatement ( disc : any, cases : any [], isLexical : boolean, loc? : SourceLocation ) {
 		return	{
 			type: 'SwitchStatement',
 			discriminant : disc,
@@ -93,7 +93,7 @@ class DefaultAstBuilder implements AstBuilder {
 		};
 	}
 
-	public forInStatement ( left : any, right : any, body : any, isForEach : bool, loc? : SourceLocation ) {
+	public forInStatement ( left : any, right : any, body : any, isForEach : boolean, loc? : SourceLocation ) {
 		return	{
 			type : 'ForInStatement',
 			left : left,
@@ -176,7 +176,7 @@ class DefaultAstBuilder implements AstBuilder {
 	public functionDeclaration (
 		id : any, args : any [],
 		body : any,
-		isGenerator : bool, isExpression : bool,
+		isGenerator : boolean, isExpression : boolean,
 		loc? : SourceLocation )
 	{
 		return	{
@@ -229,7 +229,7 @@ class DefaultAstBuilder implements AstBuilder {
 		};
 	}
 	
-	public unaryExpression ( op : string, arg : any, isPrefix : bool, loc? : SourceLocation ) {
+	public unaryExpression ( op : string, arg : any, isPrefix : boolean, loc? : SourceLocation ) {
 		return	{
 			type : 'UnaryExpression',
 			operator : op,
@@ -269,7 +269,7 @@ class DefaultAstBuilder implements AstBuilder {
 		};
 	}
 
-	public updateExpression ( op : string, arg : any, isPrefix : bool, loc? : SourceLocation ) {
+	public updateExpression ( op : string, arg : any, isPrefix : boolean, loc? : SourceLocation ) {
 		return	{
 			type : 'UpdateExpression',
 			operator : op,
@@ -297,7 +297,7 @@ class DefaultAstBuilder implements AstBuilder {
 		};
 	}
 
-	public memberExpression ( obj : any, prop : any, isComputed : bool, loc? : SourceLocation ) {
+	public memberExpression ( obj : any, prop : any, isComputed : boolean, loc? : SourceLocation ) {
 		return	{
 			type : 'MemberExpression',
 			object : obj,
@@ -310,7 +310,7 @@ class DefaultAstBuilder implements AstBuilder {
 	public functionExpression (
 		id : any, args : any [],
 		body : any,
-		isGenerator : bool, isExpression : bool,
+		isGenerator : boolean, isExpression : boolean,
 		loc? : SourceLocation )
 	{
 		return	{
@@ -432,7 +432,7 @@ class DefaultAstBuilder implements AstBuilder {
 		};
 	}
 	
-	public comprehensionBlock ( left : any, right : any, isForEach : bool, loc? : SourceLocation ) {
+	public comprehensionBlock ( left : any, right : any, isForEach : boolean, loc? : SourceLocation ) {
 		return	{
 			type : 'ComprehensionBlock',
 			left : left,

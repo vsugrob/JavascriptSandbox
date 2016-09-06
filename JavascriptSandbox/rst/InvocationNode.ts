@@ -91,7 +91,7 @@ class InvocationNode extends RstNode {
 		}
 	}
 
-	public static makeInvocation ( runtime : Runtime, construct : bool, callerNode : RstNode,
+	public static makeInvocation ( runtime : Runtime, construct : boolean, callerNode : RstNode,
 		invocationData : InvocationData )
 	{
 		var unboundData = FunctionNode.unbind ( invocationData.funcInstance, invocationData.args );
@@ -181,7 +181,7 @@ class InvocationNode extends RstNode {
 		return	arguments;
 	}
 
-	private static toArgsObject ( calleeIsStrict : bool, funcInstance : Function, args : any [] ) {
+	private static toArgsObject ( calleeIsStrict : boolean, funcInstance : Function, args : any [] ) {
 		var argsObj : IArguments;
 
 		if ( calleeIsStrict )

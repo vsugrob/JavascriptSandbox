@@ -68,7 +68,7 @@ interface IOutArg {
 	bind = Function.prototype.bind,
 	TypeError = global.TypeError,
 	ceil = <( x : number ) => number> Math.ceil.bind ( Math ),
-	isFinite = <( number : number ) => bool> global.isFinite,
+	isFinite = <( number : number ) => boolean> global.isFinite,
 	isNaN = <( number : number ) => bool> global.isNaN,
 	isInt = function ( value : number ) { return	typeof value === 'number' && isFinite ( value ) && value === ceil ( value ); },
 	setInterval = <( expression : any, msec? : number, language? : any ) => number> global.setInterval,
@@ -368,7 +368,7 @@ interface IOutArg {
 		return	props;
 	},
 	checkObjectHasProperties = function ( o : any ) {
-		var hasProto : bool;
+		var hasProto : boolean;
 
 		try {
 			hasProto = getPrototypeOf ( o ) !== null;
@@ -377,7 +377,7 @@ interface IOutArg {
 		if ( hasProto )
 			return	true;
 
-		var hasOwnProps : bool;
+		var hasOwnProps : boolean;
 
 		try {
 			hasOwnProps = getOwnPropertyNames ( o ).length !== 0;
@@ -720,7 +720,7 @@ interface IOutArg {
 		} );
 	},
 	sendReflectResponse = function ( reqId : number, oRefl : ReflectedValue,
-		path : string [], props : ReflectByTreeQueryNode [], scanInherited : bool )
+		path : string [], props : ReflectByTreeQueryNode [], scanInherited : boolean )
 	{
 		sendResponse ( 'reflect-response', reqId, {
 			oRefl : oRefl,

@@ -17,12 +17,12 @@ interface AstBuilder {
 	ifStatement? ( test : any, cons : any, alt : any, loc? : SourceLocation );
 	/* The isLexical flag is metadata indicating whether the switch statement
 	 * contains any unnested let declarations (and therefore introduces a new lexical scope). */
-	switchStatement? ( disc : any, cases : any [], isLexical : bool, loc? : SourceLocation );
+	switchStatement? ( disc : any, cases : any [], isLexical : boolean, loc? : SourceLocation );
 	whileStatement? ( test : any, body : any, loc? : SourceLocation );
 	doWhileStatement? ( body : any, test : any, loc? : SourceLocation );
 	// init, test and update can be null.
 	forStatement? ( init : any, test : any, update : any, body : any, loc? : SourceLocation );
-	forInStatement? ( left : any, right : any, body : any, isForEach : bool, loc? : SourceLocation );
+	forInStatement? ( left : any, right : any, body : any, isForEach : boolean, loc? : SourceLocation );
 	// label can be null.
 	breakStatement? ( label : any, loc? : SourceLocation );
 	// label can be null.
@@ -37,7 +37,7 @@ interface AstBuilder {
 	letStatement? ( head : any [], body : any, loc? : SourceLocation );
 
 	// Declarations:
-	functionDeclaration? ( id : any, args : any [], body : any, isGenerator : bool, isExpression : bool, loc? : SourceLocation );
+	functionDeclaration? ( id : any, args : any [], body : any, isGenerator : boolean, isExpression : boolean, loc? : SourceLocation );
 	// kind can be "const" | "let" | "var".
 	variableDeclaration? ( kind : string, dtors : any [], loc? : SourceLocation );
 	// init can be null.
@@ -48,7 +48,7 @@ interface AstBuilder {
 	conditionalExpression? ( test : any, cons : any, alt : any, loc? : SourceLocation );
 	// op can be  "-" | "+" | "!" | "~" | "typeof" | "void" | "delete".
 	// TODO: why 'isPrefix' is there? Shouldn't it be always set to true?
-	unaryExpression? ( op : string, arg : any, isPrefix : bool, loc? : SourceLocation );
+	unaryExpression? ( op : string, arg : any, isPrefix : boolean, loc? : SourceLocation );
 	/* op can be "==" | "!=" | "===" | "!==" | "<" | "<=" | ">" | ">=" | "<<" | ">>" | ">>>" |
 	 * "+" | "-" | "*" | "/" | "%" | "|" | "^" | "in" | "instanceof". */
 	binaryExpression? ( op : string, left : any, right : any, loc? : SourceLocation );
@@ -58,12 +58,12 @@ interface AstBuilder {
 	// op can be "||" | "&&".
 	logicalExpression? ( op : string, left : any, right : any, loc? : SourceLocation );
 	// op can be "++" | "--".
-	updateExpression? ( op : string, arg : any, isPrefix : bool, loc? : SourceLocation );
+	updateExpression? ( op : string, arg : any, isPrefix : boolean, loc? : SourceLocation );
 	newExpression? ( callee : any, args : any [], loc? : SourceLocation );
 	callExpression? ( callee : any, args : any [], loc? : SourceLocation );
-	memberExpression? ( obj : any, prop : any, isComputed : bool, loc? : SourceLocation );
+	memberExpression? ( obj : any, prop : any, isComputed : boolean, loc? : SourceLocation );
 	// name can be null.
-	functionExpression? ( id : any, args : any [], body : any, isGenerator : bool, isExpression : bool, loc? : SourceLocation );
+	functionExpression? ( id : any, args : any [], body : any, isGenerator : boolean, isExpression : boolean, loc? : SourceLocation );
 	// Any of elts can be null.
 	arrayExpression? ( elts : any [], loc? : SourceLocation );
 	objectExpression? ( props : any [], loc? : SourceLocation );
@@ -86,7 +86,7 @@ interface AstBuilder {
 	// test can be null. The test argument is null if and only if the node is a default clause.
 	switchCase? ( test : any, cons : any [], loc? : SourceLocation );
 	catchClause? ( arg : any, guard : any, body : any, loc? : SourceLocation );
-	comprehensionBlock? ( left : any, right : any, isForEach : bool, loc? : SourceLocation );
+	comprehensionBlock? ( left : any, right : any, isForEach : boolean, loc? : SourceLocation );
 
 	// Miscellaneous:
 	identifier? ( name : string, loc? : SourceLocation );

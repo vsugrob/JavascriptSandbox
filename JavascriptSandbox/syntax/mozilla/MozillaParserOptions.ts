@@ -5,7 +5,7 @@ interface MozillaParserOptions {
 	/** When loc is true, the parser includes source location information
 	  * in the returned AST nodes.
 	  * Default: true. */
-	loc? : bool;
+	loc? : boolean;
 	/** A description of the input source; typically a filename, path, or URL.
 	  * This string is not meaningful to the parsing process,
 	  * but is produced as part of the source location information in the returned AST nodes.

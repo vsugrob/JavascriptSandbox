@@ -5,7 +5,7 @@
 
 interface BinOpInfo {
 	precedence : number;
-	leftToRight : bool;		// Associativity.
+	leftToRight : boolean;		// Associativity.
 	builderCbName : string;	// Name of the ast builder callback.
 }
 
@@ -14,26 +14,26 @@ interface BinOpInfoMap {
 }
 
 interface ExpressionParserState {
-	nextTokenIsNotOp : bool;
+	nextTokenIsNotOp : boolean;
 	nextOpInfo : BinOpInfo;
-	stopOnInOperator : bool;
-	stoppedOnInOperator : bool;
+	stopOnInOperator : boolean;
+	stoppedOnInOperator : boolean;
 	braceBalance : number;
 }
 
 interface ParseExprInOutData {
-	in_StopOnInOperator : bool;
-	out_StoppedOnInOperator : bool;
+	in_StopOnInOperator : boolean;
+	out_StoppedOnInOperator : boolean;
 }
 
 class ExpressionParser {
 	/* Following fields represents state of ExpressionParser.
 	 * Important: if these fields are changed, pushState (), popState ()
 	 * and ExpressionParserState must be changed accordingly. */
-	private static nextTokenIsNotOp : bool;		// Signals that next token is not representing an operator.
+	private static nextTokenIsNotOp : boolean;		// Signals that next token is not representing an operator.
 	private static nextOpInfo : BinOpInfo;
-	private static stopOnInOperator : bool;
-	private static stoppedOnInOperator : bool;
+	private static stopOnInOperator : boolean;
+	private static stoppedOnInOperator : boolean;
 	/** This counter increases when parser encounters open braces
 	  * '[', '{' or '(' and decreases when it meets
 	  * pairing close braces ']', '}' or ')'. */

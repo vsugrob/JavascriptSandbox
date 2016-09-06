@@ -10,7 +10,7 @@ interface ParseVarDeclOutData {
 	/** This flas is set to true after parseVariableDeclaration () call
 	  * when resulting variable declaration is suitable for for..in loop,
 	  * i.e. when parsing of init expression was stopped on 'in' operator. */
-	itWasForInVarDecl : bool;
+	itWasForInVarDecl : boolean;
 }
 
 class StatementParser {
@@ -130,7 +130,7 @@ class StatementParser {
 	}
 
 	// Generalized method for parsing 'break' and 'continue'
-	private static parseJump ( parser : Parser, isBreak : bool ) {
+	private static parseJump ( parser : Parser, isBreak : boolean ) {
 		if ( Parser.DEBUG ) {
 			System.assert (
 				IdentifierToken.matchKeyword ( parser.lexer.token, 'break' ) ||
@@ -246,7 +246,7 @@ class StatementParser {
 			var token = lexer.token;
 		
 			var firstExprOrDecl : any,
-				isForInLoop : bool;
+				isForInLoop : boolean;
 
 			if ( PunctuatorToken.match ( lexer.token, Punctuator.Semicolon ) ) {
 				firstExprOrDecl = null;
@@ -874,7 +874,7 @@ class StatementParser {
 
 		var immediateParentDepth = StatementParser.depth - 1,
 			labelDict = parser.scope.labels,
-			found : bool;
+			found : boolean;
 
 		do {
 			// Seek for label that is an immediate parent for current node.

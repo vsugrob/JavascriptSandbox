@@ -56,7 +56,7 @@ class AstScope {
 class AstContext {
 	public scope : AstScope = null;
 	
-	constructor ( public analyzeScope : bool ) {}
+	constructor ( public analyzeScope : boolean ) {}
 
 	public enterScope ( path : any [], node : EsAstNode ) {
 		if ( this.scope === null )
@@ -121,7 +121,7 @@ class Ast {
     };
 
 	public static walk ( node : any,
-		inspectNodeCallback : ( node : EsAstNode, path : any [] ) => bool,
+		inspectNodeCallback : ( node : EsAstNode, path : any [] ) => boolean,
 		path? : any [] )
 	{
 		if ( !Array.isArray ( path ) )

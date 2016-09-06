@@ -6,7 +6,7 @@
 
 interface LabelDictionaryEntry {
 	// Whether label encloses iteration statement.
-	enclosesIteration : bool;
+	enclosesIteration : boolean;
 	// Label depth in context of statement tree.
 	depth : number;
 }
@@ -31,10 +31,10 @@ interface FunctionScopeData {
 
 // TODO: rename to lexical scope?
 interface ParserScope {
-	isStrict : bool;
-	inFunction : bool;
-	inIteration : bool;
-	inSwitch : bool;
+	isStrict : boolean;
+	inFunction : boolean;
+	inIteration : boolean;
+	inSwitch : boolean;
 	labels : LabelDictionary;
 	funcData : FunctionScopeData;
 	parent : ParserScope;
@@ -49,26 +49,26 @@ interface ParserOptions extends MozillaParserOptions {
 	  * "Annex C (informative) The Strict Mode of ECMAScript" even when
 	  * source code does not contain Strict Mode Directive 'use strict'.
 	  * Default: false. */
-	isStrict? : bool;
+	isStrict? : boolean;
 	/** Whether to parse let variable declarations.
 	  * Default: true.
 	  * Spec: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let */
-	parseLet? : bool;
+	parseLet? : boolean;
 	/** Whether to parse const variable declarations.
 	  * Default: true.
 	  * Spec: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const */
-	parseConst? : bool;
+	parseConst? : boolean;
 	/** When true, ParseResult.comments will be filled with elements of type CommentNode.
 	  * Default: false. */
-	collectComments? : bool;
+	collectComments? : boolean;
 	/** Allow keywords to contain unicode hex escapes?
 	  * E.g. keyword 'for' can be written '\u0066\u006f\u0072'.
 	  * Default: true. */
-	allowEscapeSequenceInKeyword? : bool;
+	allowEscapeSequenceInKeyword? : boolean;
 	/** Allow regex flags to contain unicode hex escapes?
 	  * E.g. '/regex/gim' can be written as '/regex/\u0067\u0069\u006d'.
 	  * Default: true. */
-	allowEscapeSequenceInRegexFlags? : bool;
+	allowEscapeSequenceInRegexFlags? : boolean;
 }
 
 interface ParseResult {
@@ -85,16 +85,16 @@ class Parser {
 	public static DEBUG = undefined;
 	public lexer : Lexer;
 	public scope : ParserScope;
-	public startLineIndex : number;	// Index of the first line of source code.
-	public provideLoc : bool;		// Whether we should add location info to each produced AST node.
-	public sourcePath : string;		// Source code path.
-	public builder : AstBuilder;	// AstNode factory.
-	public isStrict : bool;			// Whether source code should be parsed according to 'strict mode' rules.
-	public parseLet : bool;			// Parse let variable declarations.
-	public parseConst : bool;		// Parse const variable declarations.
-	public collectComments : bool;
-	public allowEscapeSequenceInKeyword : bool;
-	public allowEscapeSequenceInRegexFlags : bool;
+	public startLineIndex : number;		// Index of the first line of source code.
+	public provideLoc : boolean;		// Whether we should add location info to each produced AST node.
+	public sourcePath : string;			// Source code path.
+	public builder : AstBuilder;		// AstNode factory.
+	public isStrict : boolean;			// Whether source code should be parsed according to 'strict mode' rules.
+	public parseLet : boolean;			// Parse let variable declarations.
+	public parseConst : boolean;		// Parse const variable declarations.
+	public collectComments : boolean;
+	public allowEscapeSequenceInKeyword : boolean;
+	public allowEscapeSequenceInRegexFlags : boolean;
 	/** This indicates that Parser.parse () method is currently running.
 	  * Note that parser can invoke custom ast node builder callback
 	  * which in turn can possibly call Parser.parse () on the same parser instance,

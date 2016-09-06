@@ -38,7 +38,7 @@ class RstBuilder implements AstBuilder {
 		return	new IfStatement ( test, cons, alt, loc );
 	}
 
-	public switchStatement ( disc : any, cases : any [], isLexical : bool, loc? : SourceLocation ) {
+	public switchStatement ( disc : any, cases : any [], isLexical : boolean, loc? : SourceLocation ) {
 		return	new SwitchStatement ( disc, cases, isLexical, loc );
 	}
 
@@ -54,7 +54,7 @@ class RstBuilder implements AstBuilder {
 		return	new ForStatement ( init, test, update, body, loc );
 	}
 
-	public forInStatement ( left : any, right : any, body : any, isForEach : bool, loc? : SourceLocation ) {
+	public forInStatement ( left : any, right : any, body : any, isForEach : boolean, loc? : SourceLocation ) {
 		return	new ForInStatement ( left, right, body, isForEach, loc );
 	}
 	
@@ -96,7 +96,7 @@ class RstBuilder implements AstBuilder {
 	public functionDeclaration (
 		id : any, args : any [],
 		body : any,
-		isGenerator : bool, isExpression : bool,
+		isGenerator : boolean, isExpression : boolean,
 		loc? : SourceLocation )
 	{
 		return	new FunctionDeclaration ( id, args, body, loc );
@@ -119,7 +119,7 @@ class RstBuilder implements AstBuilder {
 		return	new ConditionalExpression ( test, cons, alt, loc );
 	}
 	
-	public unaryExpression ( op : string, arg : any, isPrefix : bool, loc? : SourceLocation ) {
+	public unaryExpression ( op : string, arg : any, isPrefix : boolean, loc? : SourceLocation ) {
 		return	new UnaryExpression ( op, arg, loc );
 	}
 
@@ -135,7 +135,7 @@ class RstBuilder implements AstBuilder {
 		return	new LogicalExpression ( op, left, right, loc  || null );
 	}
 
-	public updateExpression ( op : string, arg : any, isPrefix : bool, loc? : SourceLocation ) {
+	public updateExpression ( op : string, arg : any, isPrefix : boolean, loc? : SourceLocation ) {
 		return	new UpdateExpression ( op, arg, isPrefix, loc );
 	}
 
@@ -147,14 +147,14 @@ class RstBuilder implements AstBuilder {
 		return	new CallExpression ( callee, args, loc );
 	}
 
-	public memberExpression ( obj : any, prop : any, isComputed : bool, loc? : SourceLocation ) {
+	public memberExpression ( obj : any, prop : any, isComputed : boolean, loc? : SourceLocation ) {
 		return	new MemberExpression ( obj, prop, isComputed, loc );
 	}
 	
 	public functionExpression (
 		id : any, args : any [],
 		body : any,
-		isGenerator : bool, isExpression : bool,
+		isGenerator : boolean, isExpression : boolean,
 		loc? : SourceLocation )
 	{
 		return	new FunctionExpression ( id, args, body, loc );
@@ -217,7 +217,7 @@ class RstBuilder implements AstBuilder {
 		return	new CatchClause ( arg, body, loc );
 	}
 	
-	public comprehensionBlock ( left : any, right : any, isForEach : bool, loc? : SourceLocation ) {
+	public comprehensionBlock ( left : any, right : any, isForEach : boolean, loc? : SourceLocation ) {
 		// TODO: implement.
 		//return	new ComprehensionBlock ( left, right, isForEach, loc );
 	}
