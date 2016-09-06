@@ -1,0 +1,44 @@
+returned value format:
+{ (1)
+	value : <string value/error representation>,
+	success : <true/false>,
+	hasCustomStringRepr : <has custom string representation>,
+	type : {
+		specificType,
+		classType : <javascript [[Class]]>
+	},
+	hasProperties : <used when properties wasn't scanned and all we need to know is whether value has properties>,
+	properties : [
+		{
+			name : <string name or null if property represents object prototype>,
+			attributes : <string like "cewgso" where c - configurable, e - enumerable, w - writable, g - has getter, s - has setter, o - is own property. "" for prototype>,
+			value : <same format as (1)>
+		}
+	]
+}
+
+reflect by tree query format example:
+[
+	'a',
+	{
+		name : 'propertyName',
+		props : [
+			'b',
+			'c'
+		]
+	},
+	'd',
+	{
+		name : null,	// [[prototype]]
+		props : [
+			{
+				name : null,	// [[prototype]]
+				props : [
+					'e',
+					'f'
+				]
+			}
+		]
+	},
+	null	// [[prototype]]
+]

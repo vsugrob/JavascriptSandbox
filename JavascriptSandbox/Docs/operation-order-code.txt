@@ -1,0 +1,30 @@
+﻿// Definitions:
+var oVal = { v : 14 },
+    pVal = { toString : function () { console.log ( 'convert p value to string' ); return 'p'; } };
+Object.defineProperty ( oVal, 'p', {
+  configurable : true, enumerable : true,
+  get : function () { console.log ( 'read value of property "p"' ); return this.v; },
+  set : function ( v ) { console.log ( 'write value to property "p"' ); return this.v = v; }
+} );
+Object.defineProperty ( this, 'o', {
+  configurable : true, enumerable : true,
+  get : function () { console.log ( 'eval "o" expression' ); return oVal; }
+} );
+Object.defineProperty ( this, 'p', {
+  configurable : true, enumerable : true,
+  get : function () { console.log ( 'eval "p" expression' ); return pVal; }
+} );
+Object.defineProperty ( this, 'v', {
+  configurable : true, enumerable : true,
+  get : function () { console.log ( 'eval "v" expression' ); return 14; }
+} );
+
+// Use: evaluate expression involving o, p, v identifiers and inspect console output.
+// Example:
+o [p] = v
+// Output:
+eval "o" expression
+eval "p" expression
+eval "v" expression
+convert p value to string
+write value to property "p"

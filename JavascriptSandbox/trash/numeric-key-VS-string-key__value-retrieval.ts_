@@ -1,0 +1,59 @@
+﻿
+( function () {
+	'use strict';
+
+	function profile ( work : Function, header : string, times = 10 ) {
+		var timeStart = Date.now ();
+
+		for ( var i = 0 ; i < times ; i++ ) {
+			work ();
+		}
+
+		var timeEnd = Date.now (),
+			profilingTimeElapsed = ( timeEnd - timeStart ) / 1000;
+
+		console.log ( header + ': ' + profilingTimeElapsed + 'sec' );
+	}
+
+	var numEntries = 15,
+		numericDict = Object.create ( null ),
+		numericKeys = [],
+		stringDict = Object.create ( null ),
+		stringKeys = [];
+
+	for ( var i = 0 ; i < numEntries ; i++ ) {
+		numericKeys.push ( i );
+		numericDict [i] = i;
+		var strKey = 'abc' + String.fromCharCode ( 0x61 + i );
+		stringKeys.push ( strKey );
+		stringDict [strKey] = i;
+	}
+
+	numericDict = Object.freeze ( numericDict );
+	stringKeys = Object.freeze ( stringKeys );
+
+	var randomKeyIdxs = [],
+		numIterations = 10000;
+
+	for ( var i = 0 ; i < numIterations ; i++ ) {
+		var keyIdx = Math.floor ( Math.random () * numEntries );
+		randomKeyIdxs.push ( keyIdx );
+	}
+
+	function testValueRetrieval ( dict : any, keys : any [] ) {
+		var data = Array ( numIterations );
+
+		for ( var i = 0 ; i < numIterations ; i++ ) {
+			var key = keys [randomKeyIdxs [i]],
+				val = dict [key];
+
+			data [i] = val;
+		}
+
+		return	data;
+	}
+
+	var numTests = 10000;
+	profile ( testValueRetrieval.bind ( null, stringDict, stringKeys ), 'string dict', numTests );
+	profile ( testValueRetrieval.bind ( null, numericDict, numericKeys ), 'numeric dict', numTests );
+} ) ();

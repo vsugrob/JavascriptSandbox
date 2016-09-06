@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Parser test</title>
+    <script src="third-party/gildas-lormeau-zip.js/zip.js" type="text/javascript"></script>
+    <script src="third-party/gildas-lormeau-zip.js/zip-ext.js" type="text/javascript"></script>
+
+    <script src="../../esprima/esprima.js" type="text/javascript"></script>
+
+    <script src="../../System.js"></script>
+    <script src="../../Configuration.js"></script>
+    <script src="../../syntax/lexer/TokenType.js"></script>
+    <script src="../../syntax/lexer/Token.js"></script>
+    <script src="../../syntax/lexer/NumericTokenKind.js"></script>
+    <script src="../../syntax/lexer/NumericToken.js"></script>
+    <script src="../../syntax/lexer/StringTokenKind.js"></script>
+    <script src="../../syntax/lexer/StringToken.js"></script>
+    <script src="../../syntax/lexer/IdentifierKind.js"></script>
+    <script src="../../syntax/lexer/IdentifierToken.js"></script>
+    <script src="../../syntax/lexer/RegexToken.js"></script>
+    <script src="../../syntax/lexer/Punctuator.js"></script>
+    <script src="../../syntax/lexer/PunctuatorToken.js"></script>
+    <script src="../../syntax/lexer/CommentNode.js"></script>
+    <script src="../../syntax/lexer/Lexer.js"></script>
+    <script src="../../syntax/parser/Parser.js"></script>
+    <script src="../../syntax/parser/StatementParser.js"></script>
+    <script src="../../syntax/parser/OpPrecedence.js"></script>
+    <script src="../../syntax/parser/ExpressionParser.js"></script>
+    <script src="../../syntax/parser/FunctionParser.js"></script>
+    <script src="../../syntax/parser/DefaultAstBuilder.js"></script>
+    <script src="parser.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        #content {
+            margin: 0 auto;
+            max-width : 800px;
+        }
+
+        .success {
+            color : green;
+        }
+
+        .failure {
+            color : red;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h4>Abstract Syntax Tree comparison:</h4>
+        Nodes: <span id="totalNumNodes"></span><br />
+        Lines: <span id="totalNumLines"></span><br />
+        Size: <span id="totalSize"></span><br />
+        My Parser Kbytes/sec: <span id="myParserKbytesPerSec"></span><br />
+        Errors: <span id="numErrors">0</span><br />
+        Differences: <span id="numDifferences">0</span><br />
+        Time: <span id="timeElapsed"></span><br />
+        File: <span id="currentFile"></span><br />
+        Progress: <span id="progress"></span><br /><br />
+    </div>
+</body>
+</html>

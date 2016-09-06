@@ -1,0 +1,607 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{BE8E1A27-44D9-42C4-BF15-426C0FD26E70}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="app.css" />
+    <TypeScriptCompile Include="Ast.ts" />
+    <Content Include="Ast.js">
+      <DependentUpon>Ast.ts</DependentUpon>
+    </Content>
+    <Content Include="codemirror\addon\edit\continuecomment.js" />
+    <Content Include="codemirror\addon\edit\matchbrackets.js" />
+    <Content Include="codemirror\lib\codemirror.css" />
+    <Content Include="codemirror\lib\codemirror.js" />
+    <Content Include="codemirror\mode\javascript\javascript.js" />
+    <Content Include="codemirror\theme\ambiance-mobile.css" />
+    <Content Include="codemirror\theme\ambiance.css" />
+    <Content Include="codemirror\theme\blackboard.css" />
+    <Content Include="codemirror\theme\cobalt.css" />
+    <Content Include="codemirror\theme\eclipse.css" />
+    <Content Include="codemirror\theme\elegant.css" />
+    <Content Include="codemirror\theme\erlang-dark.css" />
+    <Content Include="codemirror\theme\lesser-dark.css" />
+    <Content Include="codemirror\theme\monokai.css" />
+    <Content Include="codemirror\theme\neat.css" />
+    <Content Include="codemirror\theme\night.css" />
+    <Content Include="codemirror\theme\rubyblue.css" />
+    <Content Include="codemirror\theme\solarized.css" />
+    <Content Include="codemirror\theme\twilight.css" />
+    <Content Include="codemirror\theme\vibrant-ink.css" />
+    <Content Include="codemirror\theme\xq-dark.css" />
+    <Content Include="codemirror\theme\xq-light.css" />
+    <TypeScriptCompile Include="Configuration.ts" />
+    <Content Include="Configuration.js">
+      <DependentUpon>Configuration.ts</DependentUpon>
+    </Content>
+    <Content Include="Docs\chrome25-globals.txt" />
+    <Content Include="Docs\chrome25-non-undefinable-globals.txt" />
+    <Content Include="default.htm" />
+    <Content Include="app.js">
+      <DependentUpon>app.ts</DependentUpon>
+    </Content>
+    <Content Include="Docs\division-or-regex-preceding-tokens.txt" />
+    <Content Include="Docs\exception-var.txt" />
+    <Content Include="Docs\ie9-globals.txt" />
+    <Content Include="Docs\ie9-non-undefinable-globals.txt" />
+    <Content Include="Docs\ie9-Worker-globals.txt" />
+    <Content Include="Docs\jailbreak-test-code.txt" />
+    <Content Include="Docs\operation-order-code.txt" />
+    <Content Include="Docs\parser.txt" />
+    <Content Include="Docs\reflection-format.txt" />
+    <Content Include="Docs\rst-expression-nodes-precedence.txt" />
+    <Content Include="Docs\scope-controlling-code-required-api.txt" />
+    <Content Include="Docs\scoping.txt" />
+    <Content Include="Docs\vm.txt" />
+    <Content Include="esprima/escodegen.browser.js" />
+    <Content Include="esprima/esprima.js" />
+    <Content Include="img\error.png" />
+    <Content Include="img\expander-closed.png" />
+    <Content Include="img\expander-open.png" />
+    <TypeScriptCompile Include="tests\sandbox-calls.ts" />
+    <TypeScriptCompile Include="rst\Program.ts" />
+    <TypeScriptCompile Include="rst\Identifier.ts" />
+    <TypeScriptCompile Include="rst\RstBuilder.ts" />
+    <Content Include="rst\RstBuilder.js">
+      <DependentUpon>RstBuilder.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\TODO.txt" />
+    <Content Include="tests\parser\test-scripts\cdnjs.zip" />
+    <None Include="trash\Jsvm.ts_" />
+    <TypeScriptCompile Include="syntax\lexer\Token.ts" />
+    <TypeScriptCompile Include="syntax\lexer\Lexer.ts" />
+    <TypeScriptCompile Include="syntax\mozilla\AbstractSyntaxTree.ts" />
+    <Content Include="syntax\mozilla\AbstractSyntaxTree.js">
+      <DependentUpon>AbstractSyntaxTree.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\lexer\IdentifierToken.ts" />
+    <TypeScriptCompile Include="syntax\lexer\CommentNode.ts" />
+    <Content Include="syntax\lexer\CommentNode.js">
+      <DependentUpon>CommentNode.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\lexer\IdentifierKind.ts" />
+    <Content Include="syntax\lexer\IdentifierKind.js">
+      <DependentUpon>IdentifierKind.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\IdentifierToken.js">
+      <DependentUpon>IdentifierToken.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\Lexer.js">
+      <DependentUpon>Lexer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\parser\Parser.ts" />
+    <TypeScriptCompile Include="syntax\lexer\NumericToken.ts" />
+    <Content Include="syntax\lexer\NumericToken.js">
+      <DependentUpon>NumericToken.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\lexer\StringToken.ts" />
+    <TypeScriptCompile Include="syntax\lexer\RegexToken.ts" />
+    <TypeScriptCompile Include="syntax\lexer\PunctuatorToken.ts" />
+    <TypeScriptCompile Include="syntax\lexer\Punctuator.ts" />
+    <TypeScriptCompile Include="syntax\lexer\NumericTokenKind.ts" />
+    <Content Include="syntax\lexer\NumericTokenKind.js">
+      <DependentUpon>NumericTokenKind.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\Punctuator.js">
+      <DependentUpon>Punctuator.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\PunctuatorToken.js">
+      <DependentUpon>PunctuatorToken.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\RegexToken.js">
+      <DependentUpon>RegexToken.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\StringToken.js">
+      <DependentUpon>StringToken.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\parser\ExpressionParser.ts" />
+    <TypeScriptCompile Include="syntax\parser\DefaultAstBuilder.ts" />
+    <TypeScriptCompile Include="syntax\lexer\StringTokenKind.ts" />
+    <Content Include="syntax\lexer\StringTokenKind.js">
+      <DependentUpon>StringTokenKind.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\lexer\TokenType.ts" />
+    <Content Include="syntax\lexer\TokenType.js">
+      <DependentUpon>TokenType.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\mozilla\MozillaParserOptions.ts" />
+    <TypeScriptCompile Include="syntax\mozilla\AstBuilder.ts" />
+    <Content Include="syntax\mozilla\AstBuilder.js">
+      <DependentUpon>AstBuilder.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\mozilla\MozillaParserOptions.js">
+      <DependentUpon>MozillaParserOptions.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\parser\DefaultAstBuilder.js">
+      <DependentUpon>DefaultAstBuilder.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\parser\ExpressionParser.js">
+      <DependentUpon>ExpressionParser.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\parser\FunctionParser.ts" />
+    <Content Include="syntax\parser\FunctionParser.js">
+      <DependentUpon>FunctionParser.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\parser\OpPrecedence.ts" />
+    <Content Include="syntax\parser\OpPrecedence.js">
+      <DependentUpon>OpPrecedence.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\parser\Parser.js">
+      <DependentUpon>Parser.ts</DependentUpon>
+    </Content>
+    <Content Include="syntax\lexer\Token.js">
+      <DependentUpon>Token.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\parser\StatementParser.ts" />
+    <Content Include="syntax\parser\StatementParser.js">
+      <DependentUpon>StatementParser.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="syntax\SourceLocation.ts" />
+    <Content Include="syntax\SourceLocation.js">
+      <DependentUpon>SourceLocation.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="System.ts" />
+    <Content Include="System.js">
+      <DependentUpon>System.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tests\parser\parser.ts" />
+    <Content Include="tests\parser\parser.html" />
+    <Content Include="tests\parser\parser.js">
+      <DependentUpon>parser.ts</DependentUpon>
+    </Content>
+    <Content Include="tests\parser\third-party\gildas-lormeau-zip.js\deflate.js" />
+    <Content Include="tests\parser\third-party\gildas-lormeau-zip.js\inflate.js" />
+    <Content Include="tests\parser\third-party\gildas-lormeau-zip.js\mime-types.js" />
+    <Content Include="tests\parser\third-party\gildas-lormeau-zip.js\zip-ext.js" />
+    <Content Include="tests\parser\third-party\gildas-lormeau-zip.js\zip-fs.js" />
+    <Content Include="tests\parser\third-party\gildas-lormeau-zip.js\zip.js" />
+    <Content Include="tools\calc-token-rates.html" />
+    <TypeScriptCompile Include="tools\calc-token-rates.ts" />
+    <Content Include="tools\classify-identifiers.html" />
+    <TypeScriptCompile Include="tools\classify-identifiers.ts" />
+    <Content Include="tools\classify-identifiers.js">
+      <DependentUpon>classify-identifiers.ts</DependentUpon>
+    </Content>
+    <Content Include="tools\parser-comarison\assets\foundation\foundation.min.css" />
+    <Content Include="tools\parser-comarison\assets\images\autocomplete.png" />
+    <Content Include="tools\parser-comarison\assets\json2.js" />
+    <Content Include="tools\parser-comarison\assets\orion\built-editor.css" />
+    <Content Include="tools\parser-comarison\assets\orion\built-editor.min.js" />
+    <Content Include="tools\parser-comarison\assets\orion\contentassist\doctrine.js" />
+    <Content Include="tools\parser-comarison\assets\orion\contentassist\esprima.js" />
+    <Content Include="tools\parser-comarison\assets\orion\contentassist\esprimaJsContentAssist.js" />
+    <Content Include="tools\parser-comarison\assets\orion\contentassist\esprimaVisitor.js" />
+    <Content Include="tools\parser-comarison\assets\orion\contentassist\proposalUtils.js" />
+    <Content Include="tools\parser-comarison\assets\orion\contentassist\types.js" />
+    <Content Include="tools\parser-comarison\assets\orion\customeditor.js" />
+    <Content Include="tools\parser-comarison\assets\prettify\prettify.css" />
+    <Content Include="tools\parser-comarison\assets\prettify\prettify.js" />
+    <Content Include="tools\parser-comarison\assets\require.js" />
+    <Content Include="tools\parser-comarison\assets\style.css" />
+    <Content Include="tools\parser-comarison\esprima.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\angular-1.0.6.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\backbone-1.0.0.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\benchmark.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\escodegen.browser.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\escope.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\esmangle.browser.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\esmorph.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\esrefactor.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\estraverse.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\jquery-1.9.1.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\jquery.mobile-1.3.1.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\mootools-1.4.5.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\parse-js.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\underscore-1.4.1.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\XMLHttpRequest.js" />
+    <Content Include="tools\parser-comarison\test\3rdparty\yui-3.9.1.js" />
+    <Content Include="tools\parser-comarison\test\benchmarks.html" />
+    <Content Include="tools\parser-comarison\test\benchmarks.js" />
+    <Content Include="tools\parser-comarison\test\compare.html" />
+    <Content Include="tools\parser-comarison\test\compare.js" />
+    <Content Include="tools\parser-comarison\test\compat.html" />
+    <Content Include="tools\parser-comarison\test\compat.js" />
+    <Content Include="tools\parser-comarison\test\coverage.html" />
+    <Content Include="tools\parser-comarison\test\esprima.js.html" />
+    <Content Include="tools\parser-comarison\test\index.html" />
+    <Content Include="tools\parser-comarison\test\module.html" />
+    <Content Include="tools\parser-comarison\test\module.js" />
+    <Content Include="tools\parser-comarison\test\parselibs.js" />
+    <Content Include="tools\parser-comarison\test\reflect.js" />
+    <Content Include="tools\parser-comarison\test\run.js" />
+    <Content Include="tools\parser-comarison\test\runner.js" />
+    <Content Include="tools\parser-comarison\test\test.js" />
+    <Content Include="tools\rt-builtin-calls.js">
+      <DependentUpon>calc-token-rates.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\AssignmentExpression.ts" />
+    <TypeScriptCompile Include="rst\ArrayExpression.ts" />
+    <Content Include="rst\ArrayExpression.js">
+      <DependentUpon>ArrayExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\AssignmentExpression.js">
+      <DependentUpon>AssignmentExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\ExpressionStatement.ts" />
+    <TypeScriptCompile Include="rst\BinaryExpression.ts" />
+    <Content Include="rst\BinaryExpression.js">
+      <DependentUpon>BinaryExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\BlockStatement.ts" />
+    <Content Include="rst\BlockStatement.js">
+      <DependentUpon>BlockStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\DoWhileStatement.ts" />
+    <TypeScriptCompile Include="rst\BreakStatement.ts" />
+    <Content Include="rst\BreakStatement.js">
+      <DependentUpon>BreakStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\ContinueStatement.ts" />
+    <TypeScriptCompile Include="rst\ConditionalExpression.ts" />
+    <TypeScriptCompile Include="rst\CallExpression.ts" />
+    <Content Include="rst\CallExpression.js">
+      <DependentUpon>CallExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\CatchClause.ts" />
+    <Content Include="rst\CatchClause.js">
+      <DependentUpon>CatchClause.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\ConditionalExpression.js">
+      <DependentUpon>ConditionalExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\ContinueStatement.js">
+      <DependentUpon>ContinueStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\DoWhileStatement.js">
+      <DependentUpon>DoWhileStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\EmptyStatement.ts" />
+    <Content Include="rst\EmptyStatement.js">
+      <DependentUpon>EmptyStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\ExpressionStatement.js">
+      <DependentUpon>ExpressionStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\ForStatement.ts" />
+    <TypeScriptCompile Include="rst\ForInStatement.ts" />
+    <Content Include="rst\ForInStatement.js">
+      <DependentUpon>ForInStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\ForStatement.js">
+      <DependentUpon>ForStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\FunctionExpression.ts" />
+    <TypeScriptCompile Include="rst\FunctionDeclaration.ts" />
+    <Content Include="rst\FunctionDeclaration.js">
+      <DependentUpon>FunctionDeclaration.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\FunctionExpression.js">
+      <DependentUpon>FunctionExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\FunctionNode.ts" />
+    <Content Include="rst\FunctionNode.js">
+      <DependentUpon>FunctionNode.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\Identifier.js">
+      <DependentUpon>Identifier.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\Literal.ts" />
+    <TypeScriptCompile Include="rst\LabeledStatement.ts" />
+    <TypeScriptCompile Include="rst\IfStatement.ts" />
+    <Content Include="rst\IfStatement.js">
+      <DependentUpon>IfStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\InvocationNode.ts" />
+    <Content Include="rst\InvocationNode.js">
+      <DependentUpon>InvocationNode.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\LabeledStatement.js">
+      <DependentUpon>LabeledStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\Literal.js">
+      <DependentUpon>Literal.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\MemberExpression.ts" />
+    <TypeScriptCompile Include="rst\LogicalExpression.ts" />
+    <Content Include="rst\LogicalExpression.js">
+      <DependentUpon>LogicalExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\MemberExpression.js">
+      <DependentUpon>MemberExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\ObjectExpression.ts" />
+    <TypeScriptCompile Include="rst\NewExpression.ts" />
+    <Content Include="rst\NewExpression.js">
+      <DependentUpon>NewExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\ObjectExpression.js">
+      <DependentUpon>ObjectExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\Program.js">
+      <DependentUpon>Program.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\RstNode.ts" />
+    <TypeScriptCompile Include="rst\Property.ts" />
+    <Content Include="rst\Property.js">
+      <DependentUpon>Property.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\ReturnStatement.ts" />
+    <Content Include="rst\ReturnStatement.js">
+      <DependentUpon>ReturnStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\RstNode.js">
+      <DependentUpon>RstNode.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\VariableDeclaration.ts" />
+    <TypeScriptCompile Include="rst\UpdateExpression.ts" />
+    <TypeScriptCompile Include="rst\ThisExpression.ts" />
+    <TypeScriptCompile Include="rst\SequenceExpression.ts" />
+    <TypeScriptCompile Include="rst\ScopeNode.ts" />
+    <Content Include="rst\ScopeNode.js">
+      <DependentUpon>ScopeNode.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\SequenceExpression.js">
+      <DependentUpon>SequenceExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\SwitchStatement.ts" />
+    <TypeScriptCompile Include="rst\SwitchCase.ts" />
+    <Content Include="rst\SwitchCase.js">
+      <DependentUpon>SwitchCase.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\SwitchStatement.js">
+      <DependentUpon>SwitchStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\ThisExpression.js">
+      <DependentUpon>ThisExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\UnaryExpression.ts" />
+    <TypeScriptCompile Include="rst\ThrowStatement.ts" />
+    <Content Include="rst\ThrowStatement.js">
+      <DependentUpon>ThrowStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\TryStatement.ts" />
+    <Content Include="rst\TryStatement.js">
+      <DependentUpon>TryStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\UnaryExpression.js">
+      <DependentUpon>UnaryExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\UpdateExpression.js">
+      <DependentUpon>UpdateExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="rst\VariableDeclaration.js">
+      <DependentUpon>VariableDeclaration.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\VariableDeclarator.ts" />
+    <Content Include="rst\VariableDeclarator.js">
+      <DependentUpon>VariableDeclarator.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Runtime.ts" />
+    <TypeScriptCompile Include="rst\WhileStatement.ts" />
+    <Content Include="rst\WhileStatement.js">
+      <DependentUpon>WhileStatement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="rst\WithStatement.ts" />
+    <Content Include="rst\WithStatement.js">
+      <DependentUpon>WithStatement.ts</DependentUpon>
+    </Content>
+    <Content Include="Runtime.js">
+      <DependentUpon>Runtime.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="RuntimeScope.ts" />
+    <Content Include="RuntimeScope.js">
+      <DependentUpon>RuntimeScope.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="StackFrame.ts" />
+    <Content Include="StackFrame.js">
+      <DependentUpon>StackFrame.ts</DependentUpon>
+    </Content>
+    <Content Include="tests\rt-builtin-calls.html" />
+    <TypeScriptCompile Include="tests\rt-builtin-calls.ts" />
+    <Content Include="tests\rt-builtin-calls.js">
+      <DependentUpon>rt-builtin-calls.ts</DependentUpon>
+    </Content>
+    <Content Include="tests\sandbox-calls.js">
+      <DependentUpon>sandbox-calls.ts</DependentUpon>
+    </Content>
+    <Content Include="sandbox-core.js">
+      <DependentUpon>sandbox-core.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="sandbox-core.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="sandbox.ts" />
+    <TypeScriptCompile Include="sandbox-defs.ts" />
+    <Content Include="sandbox-defs.js">
+      <DependentUpon>sandbox-defs.ts</DependentUpon>
+    </Content>
+    <Content Include="sandbox.js">
+      <DependentUpon>sandbox.ts</DependentUpon>
+    </Content>
+    <Content Include="tests\sandbox-calls.html" />
+    <TypeScriptCompile Include="WatchWidget.ts" />
+    <TypeScriptCompile Include="tests\test262\RuntimeEntryPoint.ts" />
+    <Content Include="tests\test262\RuntimeEntryPoint.js">
+      <DependentUpon>RuntimeEntryPoint.ts</DependentUpon>
+    </Content>
+    <Content Include="tests\test262\website\default.html" />
+    <Content Include="tests\test262\website\favicon.ico" />
+    <Content Include="tests\test262\website\harness\cth.js" />
+    <Content Include="tests\test262\website\harness\Date_constants.js" />
+    <Content Include="tests\test262\website\harness\Date_library.js" />
+    <Content Include="tests\test262\website\harness\ed.js" />
+    <Content Include="tests\test262\website\harness\environment.js" />
+    <Content Include="tests\test262\website\harness\framework.js" />
+    <Content Include="tests\test262\website\harness\gs.js" />
+    <Content Include="tests\test262\website\harness\helper.js" />
+    <Content Include="tests\test262\website\harness\jquery-1.4.2.min.js" />
+    <Content Include="tests\test262\website\harness\jquery.base64.js" />
+    <Content Include="tests\test262\website\harness\jqueryprogressbar.js" />
+    <Content Include="tests\test262\website\harness\math_isequal.js" />
+    <Content Include="tests\test262\website\harness\math_precision.js" />
+    <Content Include="tests\test262\website\harness\numeric_conversion.js" />
+    <Content Include="tests\test262\website\harness\sections.js" />
+    <Content Include="tests\test262\website\harness\sta.js" />
+    <Content Include="tests\test262\website\harness\sth.js" />
+    <Content Include="tests\test262\website\harness\testBuiltInObject.js" />
+    <Content Include="tests\test262\website\harness\testIntl.js" />
+    <Content Include="tests\test262\website\images\back.png" />
+    <Content Include="tests\test262\website\images\button_bg.png" />
+    <Content Include="tests\test262\website\images\fade.jpg" />
+    <Content Include="tests\test262\website\images\pause.png" />
+    <Content Include="tests\test262\website\images\progressbarbg.png" />
+    <Content Include="tests\test262\website\images\rerun.png" />
+    <Content Include="tests\test262\website\images\reset.png" />
+    <Content Include="tests\test262\website\images\resume.png" />
+    <Content Include="tests\test262\website\images\run.png" />
+    <Content Include="tests\test262\website\images\runall.png" />
+    <Content Include="tests\test262\website\images\runselected.png" />
+    <Content Include="tests\test262\website\images\select.png" />
+    <Content Include="tests\test262\website\images\selected.png" />
+    <Content Include="tests\test262\website\images\selectedbutton_bg.png" />
+    <Content Include="tests\test262\website\images\spinner.gif" />
+    <Content Include="tests\test262\website\images\splitter.png" />
+    <Content Include="tests\test262\website\images\start.png" />
+    <Content Include="tests\test262\website\images\stop.png" />
+    <Content Include="tests\test262\website\images\tblheaderbg.png" />
+    <Content Include="tests\test262\website\images\tblreportheaderbg.png" />
+    <Content Include="tests\test262\website\images\tblsectionheader.png" />
+    <Content Include="tests\test262\website\images\tc39.png" />
+    <Content Include="tests\test262\website\metadata\ecma-262-toc.xml" />
+    <Content Include="tests\test262\website\metadata\ecma-402-toc.xml" />
+    <Content Include="tests\test262\website\styles\style.css" />
+    <Content Include="tests\test262\website\testcases_bestPractice.html" />
+    <Content Include="tests\test262\website\testcases_ch06.html" />
+    <Content Include="tests\test262\website\testcases_ch07.html" />
+    <Content Include="tests\test262\website\testcases_ch08.html" />
+    <Content Include="tests\test262\website\testcases_ch09.html" />
+    <Content Include="tests\test262\website\testcases_ch10.html" />
+    <Content Include="tests\test262\website\testcases_ch11.html" />
+    <Content Include="tests\test262\website\testcases_ch12.html" />
+    <Content Include="tests\test262\website\testcases_ch13.html" />
+    <Content Include="tests\test262\website\testcases_ch14.html" />
+    <Content Include="tests\test262\website\testcases_ch15.html" />
+    <Content Include="tests\test262\website\testcases_intl402.html" />
+    <Content Include="WatchWidget.css" />
+    <Content Include="WatchWidget.js">
+      <DependentUpon>WatchWidget.ts</DependentUpon>
+    </Content>
+    <Content Include="web.config" />
+    <Content Include="Docs\Ecma-262.pdf" />
+    <Content Include="tests\test262\website\json\bestPractice.json" />
+    <Content Include="tests\test262\website\json\ch06.json" />
+    <Content Include="tests\test262\website\json\ch07.json" />
+    <Content Include="tests\test262\website\json\ch08.json" />
+    <Content Include="tests\test262\website\json\ch09.json" />
+    <Content Include="tests\test262\website\json\ch10.json" />
+    <Content Include="tests\test262\website\json\ch12.json" />
+    <Content Include="tests\test262\website\json\ch13.json" />
+    <Content Include="tests\test262\website\json\ch14.json" />
+    <Content Include="tests\test262\website\json\default.json" />
+    <Content Include="tests\test262\website\json\intl402.json" />
+    <Content Include="tests\test262\website\json\suiteDescrip.json" />
+    <Content Include="tests\test262\website\json\testcases_bestPractice.json" />
+    <Content Include="tests\test262\website\json\testcases_ch06.json" />
+    <Content Include="tests\test262\website\json\testcases_ch07.json" />
+    <Content Include="tests\test262\website\json\testcases_ch08.json" />
+    <Content Include="tests\test262\website\json\testcases_ch09.json" />
+    <Content Include="tests\test262\website\json\testcases_ch10.json" />
+    <Content Include="tests\test262\website\json\testcases_ch11.json" />
+    <Content Include="tests\test262\website\json\testcases_ch12.json" />
+    <Content Include="tests\test262\website\json\testcases_ch13.json" />
+    <Content Include="tests\test262\website\json\testcases_ch14.json" />
+    <Content Include="tests\test262\website\json\testcases_ch15.json" />
+    <Content Include="tests\test262\website\json\testcases_intl402.json" />
+    <Content Include="tests\test262\website\json\ch11.json" />
+    <Content Include="tests\test262\website\json\ch15.json" />
+    <None Include="trash\Lexer.ts_with-overcomplicated-backtracking" />
+    <Content Include="trash\object-initializer-VS-class-constructor__perftest.ts_" />
+    <Content Include="trash\numeric-key-VS-string-key__value-retrieval.ts_" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="tools\GenLexerRegex\Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>JavascriptSandbox</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60068</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:22212/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+</Project>

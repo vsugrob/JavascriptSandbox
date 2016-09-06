@@ -1,0 +1,13 @@
+﻿_______________
+// Stack frame:
+Stack frame is a structure containing pointers to current scope and registers.
+{
+	scope : RuntimeScope,
+	registers : any
+}
+Its instance pushed to 'stack' upon entering into a function and popped upon exiting.
+Program/function instructions must store their data in registers of the current frame.
+User data should be stored/obtained to/from the current scope by using defVar (), setVar (), getVar ()
+and related functionality of vm.
+Absolutely no data should be stored in javascript variables when vm is between two instructions.
+Adhering to these rules we get finite state machine that can be suspended/resumed at any time.

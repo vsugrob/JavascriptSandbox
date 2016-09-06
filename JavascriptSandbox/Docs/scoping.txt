@@ -1,0 +1,168 @@
+﻿________________
+// Scoping idea:
+	{ // rootScope
+		var a = 'root_a';
+		function f;
+		{	// fScope
+			var b = 'f_b';
+			var a = 'f_a';
+			function g;
+			{	// gScope
+				var c = 'g_c';
+			},
+			var d = 'f_d';
+		},
+		var e = 'root_e';
+	}
+
+	rootScope = Object.create ( null );
+	rootScope ['a'] = 'root_a';
+	fScope = Object.create ( rootScope );
+	fScope ['b'] = 'f_b';
+	fScope ['a'] = 'f_a';	// Doesn't rewrites rootScope ['a'], just overrides it.
+	etc.
+
+______________________
+// Restore guest vars:
+	In order to get variables accessible from gScope we may use
+	var restoreCode = 'var ';
+	for ( var name in gScope ) {
+		restoreCode += name + '=this['♑'].getVar(' + name + '),';
+	}
+	This will iterate all variables through rootScope, fScope and gScope
+	with correct overridings.
+
+___________________
+// Save guest vars:
+	Variables should be saved to scopes where they were defined.
+
+	this ['♑'].setVar = function ( name, value ) {
+		var ownScope = currentScope;
+
+		while ( !ownScope.hasOwnProperty ( name ) && ownScope !== null )
+			ownScope = Object.getPrototypeOf ( ownScope );
+
+		if ( ownScope !== null )
+			ownScope [name] = value;
+	}
+
+	var saveCode = '';
+	for ( var name in gScope ) {
+		saveCode += 'this['♑'].setVar("' + name + '",' + name + ');';
+	}
+
+_______________________________________
+// Two approaches to save/restore vars:
+First:
+	/* Restore global vars */
+	try {
+	  /* Define user functions. FunctionDeclaration must be replaced with
+	   * FunctionExpression assigned to variable named with the same identifier
+	   * as a function. This code must be executed in the beginning because functions
+	   * should be available immediately on scope entrance. */
+	  /* Exec user code. */
+	} catch ( executionError ) {
+	  throw executionError;
+	} finally {
+	  /* Save global vars */
+	}
+Pros:
+	- Fast: both save and restore executed only once.
+Cons:
+	- No way to save scope vars except for globals.
+Conclusion:
+	Suitable when no debugging is needed.
+
+Second:
+	Transform code, replace variable identifiers with
+	this ['♑'].getVar () and this ['♑'].setVar (). These functions
+	save/restore vars right from current scope no matter whether
+	it is global or local.
+
+_______________________________________
+// Dissecting 'new ctor ( a1, a2... )':
+	Simply transform these expressions to 'this ['♑'].newObj ( ctor, a1, a2... )'.
+
+	this ['♑'] = function newObj ( ctor ) {
+	  var proto = typeof ctor.prototype === 'object' ? ctor.prototype : null,
+		  o = Object.create ( proto );
+
+	  ctor.apply ( o, Array.prototype.slice.call ( arguments, 1 ) );
+	  return o;
+	}
+
+	This custom implementation gives exactly the same results as native 'new'.
+	What's important is that inside this custom function we can control scope
+	creation before calling ctor.apply ().
+
+____________________
+// Source code rewriting:
+	Replace:
+	- 'this' with 'this[' + <secret> + '].thisObj'
+	- vairable reads with 'this[' + <secret> + '].getVar(' + name + ')'.
+	- writes in form 'name=<expr>' with 'this[' + <secret> + '].setVar("' + name + '",' + <expr> + ')'
+	- variable update expressions (++,--)
+	  with 'this[' + <secret> + '].setVar("' + name + '",' + 'this[' + <secret> + '].getVar(' + name + ')+/-1)'
+	  NO, use updateVar ()
+	- variable operational assignment expressions name(+=,-=,*=,/=,%=,<<=,>>=,>>>=,&=,|=,^=)<expr>
+	  with 'this[' + <secret> + '].setVar("' + name + '",' + 'this[' + <secret> + '].getVar(' + name + ')<operator>(<expr>))'.
+	  NO, use assignBy ().
+	- member calls '<<expr>.<f>>(<args>)' and '<<expr>[<f>]>(<args>)'
+	  with 'this[' + <secret> + '].callMethod(' + 'f' + ',' + <expr> + ',[' + <args> +'])'
+	                                              ^^^ func    ^^^ thisObj     ^^^ args
+	- expression calls '<expr>(<args>)'
+	  with 'this[' + <secret> + '].call(' + <expr> + ',[' + <args> +'])'
+	                                        ^^^ func        ^^^ args
+	- new expression 'new <expr>(<args>)'
+	  with 'this[' + <secret> + '].construct(' + <expr> + ',' + <args> +'])'
+	                                             ^^^ ctor       ^^^ args
+	- // TODO: function declarations/expressions.
+	  function f () {} -->
+	  this.setVar ( 'f',
+		this.createFunc (
+		  function f () {},
+		  '<function name (f here)>',
+		  [<function argument identifiers>],
+		  [<function-local variable identifiers>],
+		  [<function-local function identifiers>]
+		)
+	  );
+
+	  createFunc () adds additional fields to function object:
+	  f.enclosingScope: scope where function was defined.
+	  f.identifiers: array of function-local identifiers. These ids must be set to undefined upon function scope entrance.
+	- FunctionDeclaration/FunctionExpression transform:
+	  1. collect function-local variable and function identifiers.
+	  2. at the beginning of the function expression body initialize variable having the same name as function.
+	    insert line: this.setVar ( 'function-name', function-name );
+	  3. insert variable initialization code:
+	    for each variable-identifier
+		  insert line: this.setVar ( 'variable-identifier', undefined );
+	  4. initialize arguments:
+	    for each argument-identifier
+		  insert line: this.setVar ( 'argument-identifier', argument-identifier );
+	  5. function initialization code:
+	    for each function-identifier
+		  insert line: this.setVar ( 'function-identifier', this.createFunc ( <function expression>, ... ) );
+	- // TODO: variable/function initialization source code reordering.
+	- try {}
+	  catch ( eVar ) {
+	    var sameNameVarExists = false;
+
+		if ( this.varExists ( 'eVar' ) ) {
+		  storedScopeVar = this.getVar ( 'eVar' );
+		  sameNameVarExists = true;
+		}
+
+		this.setVar ( 'eVar', eVar );
+
+		try {
+		  <Guest code>
+		} finally {
+		  if ( sameNameVarExists )
+			this.setVar ( 'eVar', storedScopeVar );
+		  else
+		    this.deleteVar ( 'eVar' );
+		}
+	  }
+	- for ( a in b ) {}

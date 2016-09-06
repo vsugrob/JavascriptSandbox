@@ -1,0 +1,835 @@
+class RuntimeScope {
+	public fullName : string;
+	public parent : RuntimeScope = null;
+
+	constructor ( public name : string, public vars : any, public thisObj : any ) {}
+
+	public static fromObject ( name : string, varsObj : any, thisObj : any ) {
+		var s = new RuntimeScope ( name, varsObj, thisObj );
+		s.fullName = name;
+
+		return	s;
+	}
+
+	public static forkCurrent ( name : string, parent : RuntimeScope, thisObj : any ) {
+		var varsObj = Object.create ( parent.vars ),
+			s = new RuntimeScope ( name, varsObj, thisObj );
+
+		s.parent = parent;
+		s.fullName = name;
+
+		var ps = parent;
+
+		while ( ps !== null ) {
+			s.fullName = ps.name + '.' + s.fullName;
+			ps = ps.parent;
+		}
+
+		return	s;
+	}
+}
+
+class StackFrame {
+	public registers : any = Runtime.builtin.create ( null );
+	// Runtime.enterSubScope () makes currentScope not the same instance as scope.
+	public currentScope : RuntimeScope;
+
+	/* TODO: change callerNode to InvocationNode?
+	 * UPD: no, with invention of eval callerNode is more like returnToNode. */
+	// TODO: fulfill isStrict in new StackFrame (...)!
+	constructor ( public scope : RuntimeScope, public name : string,
+		public callerNode : RstNode = null, public isStrict = false )
+	{
+		this.currentScope = scope;
+	}
+}
+
+// <Instructions>
+interface VmInstruction {
+	exec ( vm : Jsvm ) : void;
+}
+
+class BinaryOp implements VmInstruction {
+	constructor ( public op : string, public regA : string, public regB : string, public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			aValue = regs [this.regA],
+			bValue = regs [this.regB],
+			resValue = undefined;
+
+		     if ( this.op === '+'   ) resValue = aValue + bValue;
+		else if ( this.op === '-'   ) resValue = aValue - bValue;
+		else if ( this.op === '*'   ) resValue = aValue * bValue;
+		else if ( this.op === '/'   ) resValue = aValue / bValue;
+		else if ( this.op === '%'   ) resValue = aValue % bValue;
+		else if ( this.op === '<<'  ) resValue = aValue << bValue;
+		else if ( this.op === '>>'  ) resValue = aValue >> bValue;
+		else if ( this.op === '>>>' ) resValue = aValue >>> bValue;
+		else if ( this.op === '&'   ) resValue = aValue & bValue;
+		else if ( this.op === '|'   ) resValue = aValue | bValue;
+		else if ( this.op === '^'   ) resValue = aValue ^ bValue;
+		else if ( this.op === '===' ) resValue = aValue === bValue;
+		else if ( this.op === '!==' ) resValue = aValue !== bValue;
+		else if ( this.op === '=='  ) resValue = aValue == bValue;
+		else if ( this.op === '!='  ) resValue = aValue != bValue;
+		else if ( this.op === '>='  ) resValue = aValue >= bValue;
+		else if ( this.op === '<='  ) resValue = aValue <= bValue;
+		else if ( this.op === '>'   ) resValue = aValue > bValue;
+		else if ( this.op === '<'   ) resValue = aValue < bValue;
+		else if ( this.op === 'in'  ) resValue = aValue in bValue;
+		else if ( this.op === 'instanceof' ) resValue = aValue instanceof bValue;
+		else throw new Error ( 'Invalid operation "' + this.op + '"' );
+
+		regs [this.regRes] = resValue;
+		vm.lastResult = resValue;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.regRes + ' = ' + this.regA + ' ' + this.op + ' ' + this.regB;
+	}
+}
+
+// NOTE: delete and void operators of UnaryExpression must be handled with different op.
+class UnaryOp implements VmInstruction {
+	constructor ( public op : string, public regVal : string, public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			value = regs [this.regVal],
+			result = undefined;
+
+		     if ( this.op === '+' ) result = +value;
+		else if ( this.op === '-' ) result = -value;
+		else if ( this.op === '!' ) result = !value;
+		else if ( this.op === '~' ) result = ~value;
+		else if ( this.op === 'typeof' ) result = typeof value;
+		else throw new Error ( 'Invalid operation "' + this.op + '"' );
+
+		regs [this.regRes] = result;
+		vm.lastResult = result;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.regRes + ' = ' + this.op + ' ' + this.regVal;
+	}
+}
+
+class LoadRegister implements VmInstruction {
+	constructor ( public reg : string, public value : any ) {}
+
+	public exec ( vm : Jsvm ) {
+		vm.registers [this.reg] = this.value;
+		vm.lastResult = this.value;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.reg + ' = val ( ' + this.value + ' )';
+	}
+}
+
+// <LHS ops>
+class GetVar implements VmInstruction {
+	constructor ( public varName : string, public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var currentScope = vm.currentScope;
+		
+		if ( this.varName in currentScope.vars ) {
+			var value = currentScope.vars [this.varName];
+			vm.registers [this.regRes] = value;
+			vm.lastResult = value;
+		} else
+			throw new ReferenceError ( this.varName + ' is not defined' );
+
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.regRes + ' = getVar ( "' + this.varName + '" )';
+	}
+}
+
+class SetVar implements VmInstruction {
+	constructor ( public varName : string, public regVal : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var varOwnScope = vm.currentScope;
+
+		while ( varOwnScope !== null && !Object.prototype.hasOwnProperty.call ( varOwnScope.vars, this.varName ) ) {
+			varOwnScope = varOwnScope.parent;
+		}
+
+		// TODO: strict mode throws 'ReferenceError: <varName> is not defined'
+		if ( varOwnScope === null )
+			varOwnScope = vm.stack [0].scope;
+
+		var value = vm.registers [this.regVal];
+		varOwnScope.vars [this.varName] = value;
+		vm.lastResult = value;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	'setVar ( "' + this.varName + '", ' + this.regVal + ' )';
+	}
+}
+
+class UpdateVar implements VmInstruction {
+	constructor ( public op : string, public varName : string, public regRes : string, public prefix : bool ) {}
+
+	public exec ( vm : Jsvm ) {
+		var varOwnScope = vm.currentScope;
+
+		while ( varOwnScope !== null && !Object.prototype.hasOwnProperty.call ( varOwnScope.vars, this.varName ) ) {
+			varOwnScope = varOwnScope.parent;
+		}
+
+		if ( varOwnScope === null )
+			throw new ReferenceError ( this.varName + ' is not defined' );
+
+		var regs = vm.registers,
+			value = varOwnScope.vars [this.varName],
+			resValue = value;
+
+		     if ( this.op === '++' ) value++;
+		else if ( this.op === '--' ) value--;
+		else throw new Error ( 'Invalid operation "' + this.op + '"' );
+
+		if ( this.prefix )
+			resValue = value;
+
+		if ( this.regRes !== null )
+			regs [this.regRes] = resValue;
+
+		varOwnScope.vars [this.varName] = value;
+		vm.lastResult = resValue;
+		vm.ip++;
+	}
+
+	public toString () {
+		var varStr = 'var ( "' + this.varName + '" )';
+
+		return	( this.regRes !== null ? this.regRes + ' = ' : '' ) +
+			( this.prefix ? this.op + varStr : varStr + this.op );
+	}
+}
+
+class CompoundAssignVar implements VmInstruction {
+	constructor ( public op : string, public varName : string, public regDelta : string,
+		public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var varOwnScope = vm.currentScope;
+
+		while ( varOwnScope !== null && !Object.prototype.hasOwnProperty.call ( varOwnScope.vars, this.varName ) ) {
+			varOwnScope = varOwnScope.parent;
+		}
+
+		if ( varOwnScope === null )
+			throw new ReferenceError ( this.varName + ' is not defined' );
+
+		var regs = vm.registers,
+			value = varOwnScope.vars [this.varName],
+			delta = regs [this.regDelta];
+
+		     if ( this.op === '+='   ) value += delta;
+		else if ( this.op === '-='   ) value -= delta;
+		else if ( this.op === '*='   ) value *= delta;
+		else if ( this.op === '/='   ) value /= delta;
+		else if ( this.op === '%='   ) value %= delta;
+		else if ( this.op === '<<='  ) value <<= delta;
+		else if ( this.op === '>>='  ) value >>= delta;
+		else if ( this.op === '>>>=' ) value >>>= delta;
+		else if ( this.op === '&='   ) value &= delta;
+		else if ( this.op === '|='   ) value |= delta;
+		else if ( this.op === '^='   ) value ^= delta;
+		else throw new Error ( 'Invalid operation "' + this.op + '"' );
+
+		if ( this.regRes !== null )
+			regs [this.regRes] = value;
+
+		varOwnScope.vars [this.varName] = value;
+		vm.lastResult = value;
+		vm.ip++;
+	}
+
+	public toString () {
+		var varStr = 'var ( "' + this.varName + '" )';
+
+		return	( this.regRes !== null ? this.regRes + ' = ' : '' ) +
+			varStr + ' ' + this.op + ' ' + this.regDelta;
+	}
+}
+
+class GetProperty implements VmInstruction {
+	constructor ( public regObj : string, public name : string, public computed : bool, public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			o = regs [this.regObj],
+			name = this.computed ? regs [this.name] : this.name;
+		
+		var value = o [name];
+		regs [this.regRes] = value;
+		vm.lastResult = value;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.regRes + ' = ' + this.regObj + '[' + ( this.computed ? this.name : '"' + this.name + '"' ) + ']';
+	}
+}
+
+class SetProperty implements VmInstruction {
+	constructor ( public regObj : string, public name : string, public computed : bool, public regVal : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			o = regs [this.regObj],
+			value = regs [this.regVal],
+			name = this.computed ? regs [this.name] : this.name;
+
+		o [name] = value;
+		vm.lastResult = value;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.regObj + '[' + ( this.computed ? this.name : '"' + this.name + '"' ) + ']' + ' = ' + this.regVal;
+	}
+}
+
+class UpdateProperty implements VmInstruction {
+	constructor ( public op : string, public regObj : string,
+		public name : string, public computed : bool,
+		public regRes : string, public prefix : bool )
+	{}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			o = regs [this.regObj],
+			name = this.computed ? regs [this.name] : this.name;
+
+		var value = o [name],
+			resValue = value;
+
+		     if ( this.op === '++' ) value++;
+		else if ( this.op === '--' ) value--;
+		else throw new Error ( 'Invalid operation "' + this.op + '"' );
+
+		if ( this.prefix )
+			resValue = value;
+
+		o [name] = value;
+		regs [this.regRes] = resValue;
+		vm.lastResult = resValue;
+		vm.ip++;
+	}
+
+	public toString () {
+		var objPropStr = this.regObj + '[' + ( this.computed ? this.name : '"' + this.name + '"' ) + ']';
+
+		return	( this.regRes !== null ? this.regRes + ' = ' : '' ) +
+			( this.prefix ? this.op + objPropStr : objPropStr + this.op );
+	}
+}
+
+class CompoundAssignProperty implements VmInstruction {
+	constructor ( public op : string, public regObj : string,
+		public name : string, public computed : bool,
+		public regDelta : string, public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			o = regs [this.regObj],
+			name = this.computed ? regs [this.name] : this.name,
+			value = o [name],
+			delta = regs [this.regDelta];
+
+		     if ( this.op === '+='   ) value += delta;
+		else if ( this.op === '-='   ) value -= delta;
+		else if ( this.op === '*='   ) value *= delta;
+		else if ( this.op === '/='   ) value /= delta;
+		else if ( this.op === '%='   ) value %= delta;
+		else if ( this.op === '<<='  ) value <<= delta;
+		else if ( this.op === '>>='  ) value >>= delta;
+		else if ( this.op === '>>>=' ) value >>>= delta;
+		else if ( this.op === '&='   ) value &= delta;
+		else if ( this.op === '|='   ) value |= delta;
+		else if ( this.op === '^='   ) value ^= delta;
+		else throw new Error ( 'Invalid operation "' + this.op + '"' );
+
+		o [name] = value;
+		regs [this.regRes] = value;
+		vm.lastResult = value;
+		vm.ip++;
+	}
+
+	public toString () {
+		var objPropStr = this.regObj + '[' + ( this.computed ? this.name : '"' + this.name + '"' ) + ']';
+
+		return	( this.regRes !== null ? this.regRes + ' = ' : '' ) +
+			objPropStr + ' ' + this.op + ' ' + this.regDelta;
+	}
+}
+// </LHS ops>
+
+class GetForInKeys implements VmInstruction {
+	constructor ( public regObj : string, public regRes : string ) {}
+
+	public exec ( vm : Jsvm ) {
+		var regs = vm.registers,
+			o = regs [this.regObj],
+			keys = [];
+
+		if ( typeof o === 'object' && o !== null ) {
+			do {
+				keys = keys.concat ( Object.keys ( o ) );
+			} while ( null !== ( o = Object.getPrototypeOf ( o ) ) );
+		}
+
+		regs [this.regRes] = keys;
+		vm.lastResult = keys;
+		vm.ip++;
+	}
+
+	public toString () {
+		return	this.regRes + ' = forInKeys ( ' + this.regObj + ' )';
+	}
+}
+
+/* TODO: implement define property instruction.
+ * Objects constructed with object literal may define getters and setters.
+ * var obj = { get "name" () {
+ *		return 15;
+ * } }
+ */
+// TODO: implement delete instruction.
+
+class Jump implements VmInstruction {
+	constructor ( public ip : number ) {}
+
+	public exec ( vm : Jsvm ) {
+		vm.ip = this.ip;
+	}
+
+	public toString () {
+		return	'jump to ' + this.ip;
+	}
+}
+
+class ConditionalJump implements VmInstruction {
+	constructor ( public regVal : string, public desiredResult : bool, public ip : number ) {}
+
+	public exec ( vm : Jsvm ) {
+		if ( !!vm.registers [this.regVal] == this.desiredResult )
+			vm.ip = this.ip;
+		else
+			vm.ip++;
+	}
+
+	public toString () {
+		return	'jump to ' + this.ip + ' if ' + this.regVal + ' evaluates to ' + this.desiredResult;
+	}
+}
+
+class Assert implements VmInstruction {
+	constructor ( public testFunc : ( vm : Jsvm ) => bool ) {}
+
+	public exec ( vm : Jsvm ) {
+		if ( !this.testFunc ( vm ) )
+			throw new Error ( 'Assert failed' );
+
+		vm.ip++;
+	}
+
+	public toString () {
+		return	'assert: ' + ( this.testFunc + '' )
+			.replace ( /[\r\n]/g, ' ' )
+			.replace ( /\s{2,}/g, ' ' );
+	}
+}
+// </Instructions>
+
+class Jsvm {
+	private globalScopeObj : any;
+	public currentScope : RuntimeScope;
+	public stack : StackFrame [];
+	public registers : any;
+	public instructions : VmInstruction [] = [];
+	public ip = 0;	// Instruction pointer.
+	/* TODO: this is not the same as statement result defined by ecma spec.
+	 * Nevertheless it is useful in debugging purposes, so let it stay here for now. */
+	public lastResult : any = undefined;
+
+	constructor () {
+		this.globalScopeObj = Object.create ( null );
+		this.currentScope = RuntimeScope.fromObject ( 'Global', this.globalScopeObj, { description : 'I\'m a global object.' } );
+		this.stack = [new StackFrame ( this.currentScope, 'Global' )];
+		this.registers = this.stack [0].registers;
+	}
+
+	public step () {
+		var instr = this.instructions [this.ip];
+
+		if ( instr )
+			instr.exec ( this );
+	}
+
+	public instructionsToString () {
+		var str = '';
+
+		for ( var i = 0 ; i < this.instructions.length ; i++ ) {
+			var instr = this.instructions [i];
+			str += i + ': ' + instr + '\n';
+		}
+
+		return	str;
+	}
+}
+
+function JsvmTest () {
+	function assert ( test : bool, message? : string ) {
+		if ( !test )
+			throw new Error ( 'Assert failed' + ( message ? ': ' + message : '' ) );
+	}
+
+	var vm = new Jsvm ();
+	// a = 14 + 16
+	vm.instructions.push ( new LoadRegister ( 'r1', 14 ) );
+	vm.instructions.push ( new LoadRegister ( 'r2', 16 ) );
+	vm.instructions.push ( new BinaryOp ( '+', 'r1', 'r2', 'r3' ) );
+	vm.instructions.push ( new SetVar ( 'a', 'r3' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['a'] === 30 && vm.registers ['r3'] === 30;
+	} ) );
+
+	// b = a++
+	vm.instructions.push ( new UpdateVar ( '++', 'a', 'r4', false ) );
+	vm.instructions.push ( new SetVar ( 'b', 'r4' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['a'] === 31 && vm.currentScope.vars ['b'] === 30 && vm.registers ['r4'] === 30;
+	} ) );
+
+	// c = { d : 'hehe' }
+	vm.instructions.push ( new LoadRegister ( 'r1', {} ) );
+	vm.instructions.push ( new LoadRegister ( 'r2', 'hehe' ) );
+	vm.instructions.push ( new SetProperty ( 'r1', 'd', false, 'r2' ) );
+	vm.instructions.push ( new SetVar ( 'c', 'r1' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	typeof vm.currentScope.vars ['c'] === 'object' && vm.currentScope.vars ['c'].d === 'hehe';
+	} ) );
+
+	// e = c.d.length
+	vm.instructions.push ( new GetVar ( 'c', 'r1' ) );
+	vm.instructions.push ( new GetProperty ( 'r1', 'd', false, 'r1' ) );
+	vm.instructions.push ( new GetProperty ( 'r1', 'length', false, 'r1' ) );
+	vm.instructions.push ( new SetVar ( 'e', 'r1' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['e'] === 4;
+	} ) );
+
+	// arr = [1, true];
+	vm.instructions.push ( new LoadRegister ( 'r1', [] ) );
+	vm.instructions.push ( new LoadRegister ( 'r2', 1 ) );
+	vm.instructions.push ( new LoadRegister ( 'r3', true ) );
+	vm.instructions.push ( new SetProperty ( 'r1', '0', false, 'r2' ) );
+	vm.instructions.push ( new SetProperty ( 'r1', '1', false, 'r3' ) );
+	vm.instructions.push ( new SetVar ( 'arr', 'r1' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var arr = vm.currentScope.vars ['arr'];
+
+		return	Array.isArray ( arr ) && arr.length === 2 && arr [0] === 1 && arr [1] === true;
+	} ) );
+
+	// f = 1; f-- || --f
+	vm.instructions.push ( new LoadRegister ( 'r1', 1 ) );
+	vm.instructions.push ( new SetVar ( 'f', 'r1' ) );
+	vm.instructions.push ( new UpdateVar ( '--', 'f', 'r1', false ) );	// f--
+	var condJump = new ConditionalJump ( 'r1', true, -1 );	// Jump over right side of binary expression if result is already true.
+	vm.instructions.push ( condJump );
+	vm.instructions.push ( new UpdateVar ( '--', 'f', 'r1', true ) );	// --f
+	condJump.ip = vm.instructions.length;
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['f'] === 0;
+	} ) );
+
+	// type = typeof arr
+	vm.instructions.push ( new GetVar ( 'arr', 'r1' ) );
+	vm.instructions.push ( new UnaryOp ( 'typeof', 'r1', 'r2' ) );
+	vm.instructions.push ( new SetVar ( 'type', 'r2' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	typeof vm.currentScope.vars ['arr'] === 'object';
+	} ) );
+
+	// c.g = ++arr [0]
+	vm.instructions.push ( new GetVar ( 'arr', 'r1' ) );
+	vm.instructions.push ( new UpdateProperty ( '++', 'r1', '0', false, 'r2', true ) );
+	vm.instructions.push ( new GetVar ( 'c', 'r1' ) );
+	vm.instructions.push ( new SetProperty ( 'r1', 'g', false, 'r2' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var vars = vm.currentScope.vars;
+
+		return	vars ['arr'][0] === 2 && vars ['c']['g'] === 2;
+	} ) );
+
+	// f += 14
+	vm.instructions.push ( new LoadRegister ( 'r1', 14 ) );
+	vm.instructions.push ( new CompoundAssignVar ( '+=', 'f', 'r1', 'r2' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['f'] === 14;
+	} ) );
+
+	// c.g <<= 2
+	vm.instructions.push ( new GetVar ( 'c', 'r1' ) );
+	vm.instructions.push ( new LoadRegister ( 'r2', 2 ) );
+	vm.instructions.push ( new CompoundAssignProperty ( '<<=', 'r1', 'g', false, 'r2', 'r3' ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['c']['g'] === 8;
+	} ) );
+
+	// while ( a < 35 ) { a++; }
+	vm.instructions.push ( new LoadRegister ( 'r2', 35 ) );
+	var whileTestIp = vm.instructions.length;
+	// test, jump to end if failed
+	vm.instructions.push ( new GetVar ( 'a', 'r1' ) );
+	vm.instructions.push ( new BinaryOp ( '<', 'r1', 'r2', 'r3' ) );	// a < 35
+	var condJump = new ConditionalJump ( 'r3', false, -1 );
+	vm.instructions.push ( condJump );
+	// body
+	vm.instructions.push ( new UpdateVar ( '++', 'a', null, false ) );	// a++
+	// jump to test
+	vm.instructions.push ( new Jump ( whileTestIp ) );
+	condJump.ip = vm.instructions.length;
+	// end
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['a'] === 35;
+	} ) );
+
+	// do { f--; } while ( f > 10 );
+	vm.instructions.push ( new LoadRegister ( 'r2', 10 ) );
+	var doWhileStartIp = vm.instructions.length;
+	// body
+	vm.instructions.push ( new UpdateVar ( '--', 'f', 'r1', false ) );	// f--
+	// test, jump to body if succeed. 
+	vm.instructions.push ( new GetVar ( 'f', 'r1' ) );
+	vm.instructions.push ( new BinaryOp ( '>', 'r1', 'r2', 'r3' ) );	// f > 10
+	vm.instructions.push ( new ConditionalJump ( 'r3', true, doWhileStartIp ) );
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		return	vm.currentScope.vars ['f'] === 10;
+	} ) );
+
+	// for ( i = 2 ; i < 5 ; i++ ) { arr [i] = i; }
+	vm.instructions.push ( new LoadRegister ( 'r1', 2 ) );
+	vm.instructions.push ( new LoadRegister ( 'r2', 5 ) );
+	// init
+	vm.instructions.push ( new SetVar ( 'i', 'r1' ) );
+	// test, jump to end if failed
+	var forTestIp = vm.instructions.length;
+	vm.instructions.push ( new GetVar ( 'i', 'r3' ) );
+	vm.instructions.push ( new BinaryOp ( '<', 'r3', 'r2', 'r4' ) );	// i < 5
+	var forCondJump = new ConditionalJump ( 'r4', false, -1 );
+	vm.instructions.push ( forCondJump );
+	// body
+	vm.instructions.push ( new GetVar ( 'i', 'r3' ) );
+	vm.instructions.push ( new GetVar ( 'arr', 'r4' ) );
+	vm.instructions.push ( new SetProperty ( 'r4', 'r3', true, 'r3' ) );	// arr [i] = i;
+	// update
+	vm.instructions.push ( new UpdateVar ( '++', 'i', null, false ) );
+	// jump to test
+	vm.instructions.push ( new Jump ( forTestIp ) );
+	forCondJump.ip = vm.instructions.length;
+	// end
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var vars = vm.currentScope.vars,
+			arr = vars ['arr'];
+
+		return	vars ['i'] === 5 && arr.length === 5 && arr [2] === 2 && arr [3] === 3 && arr [4] === 4;
+	} ) );
+
+	// strKeys = ''; obj = { a : 1, b : 2, c : 3 }; for ( k in obj ) { strKeys += k; }
+	// strKeys = ''
+	vm.instructions.push ( new LoadRegister ( 'r1', '' ) );
+	vm.instructions.push ( new SetVar ( 'strKeys', 'r1' ) );
+	vm.instructions.push ( new LoadRegister ( 'r1', { a : 1, b : 2, c : 3 } ) );
+	vm.instructions.push ( new SetVar ( 'obj', 'r1' ) );
+	// init loop_index to 0 (r2)
+	vm.instructions.push ( new LoadRegister ( 'r2', 0 ) );
+	// get obj_keys (r3)
+	vm.instructions.push ( new GetVar ( 'obj', 'r1' ) );
+	vm.instructions.push ( new GetForInKeys ( 'r1', 'r3' ) );
+	// get obj_keys.length (r4)
+	vm.instructions.push ( new GetProperty ( 'r3', 'length', false, 'r4' ) );
+	// test whether loop iteration was finished (r2 < r4)
+	var forInTestIp = vm.instructions.length;
+	vm.instructions.push ( new BinaryOp ( '<', 'r2', 'r4', 'r5' ) );
+	var forInEndJump = new ConditionalJump ( 'r5', false, -1 );
+	vm.instructions.push ( forInEndJump );
+	// get key obj_keys [loop_index] (r5)
+	vm.instructions.push ( new GetProperty ( 'r3', 'r2', true, 'r5' ) );
+	// check key still exists
+	vm.instructions.push ( new BinaryOp ( 'in', 'r5', 'r1', 'r6' ) );
+	// TODO: if not, jump to update
+	var forInUpdateJump = new ConditionalJump ( 'r6', false, -1 );
+	vm.instructions.push ( forInUpdateJump );
+	// set key variable k = obj_keys [loop_index]
+	vm.instructions.push ( new SetVar ( 'k', 'r5' ) );
+	// body, strKeys += k
+	vm.instructions.push ( new GetVar ( 'k', 'r5' ) );
+	vm.instructions.push ( new CompoundAssignVar ( '+=', 'strKeys', 'r5', null ) );
+	// update, loop_index++ (r2 = r2 + 1)
+	forInUpdateJump.ip = vm.instructions.length;
+	// TODO: make IncrementRegister instruction instead this tricky approach?
+	vm.instructions.push ( new LoadRegister ( 'r5', 1 ) );
+	vm.instructions.push ( new BinaryOp ( '+', 'r2', 'r5', 'r2' ) );
+	vm.instructions.push ( new Jump ( forInTestIp ) );
+	forInEndJump.ip = vm.instructions.length;
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var vars = vm.currentScope.vars;
+
+		return	vars ['strKeys'] === 'abc';
+	} ) );
+
+	// name = 'Alena'; if ( name === 'Alena' ) age = 21;
+	// name = 'Alena'
+	vm.instructions.push ( new LoadRegister ( 'r1', 'Alena' ) );
+	vm.instructions.push ( new SetVar ( 'name', 'r1' ) );
+	// test name === 'Alena', jump to end upon test failure.
+	vm.instructions.push ( new GetVar ( 'name', 'r2' ) );
+	vm.instructions.push ( new BinaryOp ( '===', 'r2', 'r1', 'r3' ) );
+	var ifCondEndJump = new ConditionalJump ( 'r3', false, -1 );
+	vm.instructions.push ( ifCondEndJump );
+	vm.instructions.push ( new LoadRegister ( 'r4', 21 ) );
+	vm.instructions.push ( new SetVar ( 'age', 'r4' ) );
+	// end
+	ifCondEndJump.ip = vm.instructions.length;
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var vars = vm.currentScope.vars;
+
+		return	vars ['name'] === 'Alena' && vars ['age'] === 21;
+	} ) );
+
+	// name = 'Vitalik'; if ( name === 'Alena' ) { age = 21; } else { age = 25; }
+	// name = 'Vitalik'
+	vm.instructions.push ( new LoadRegister ( 'r1', 'Vitalik' ) );
+	vm.instructions.push ( new SetVar ( 'name', 'r1' ) );
+	// test name === 'Alena', jump to else upon test failure.
+	vm.instructions.push ( new LoadRegister ( 'r2', 'Alena' ) );
+	vm.instructions.push ( new GetVar ( 'name', 'r3' ) );
+	vm.instructions.push ( new BinaryOp ( '===', 'r3', 'r2', 'r4' ) );
+	var ifCondElseJump = new ConditionalJump ( 'r4', false, -1 );
+	vm.instructions.push ( ifCondElseJump );
+	vm.instructions.push ( new LoadRegister ( 'r5', 21 ) );
+	vm.instructions.push ( new SetVar ( 'age', 'r5' ) );
+	// jump to end
+	var ifEndJump = new Jump ( -1 );
+	vm.instructions.push ( ifEndJump );
+	// else
+	ifCondElseJump.ip = vm.instructions.length;
+	vm.instructions.push ( new LoadRegister ( 'r5', 25 ) );
+	vm.instructions.push ( new SetVar ( 'age', 'r5' ) );
+	ifEndJump.ip = vm.instructions.length;
+	// end
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var vars = vm.currentScope.vars;
+
+		return	vars ['name'] === 'Vitalik' && vars ['age'] === 25;
+	} ) );
+
+	var dbgIp = vm.instructions.length;
+	/* switch ( color ) {
+		case 'yellow':
+		case 'red':
+			temperature = 'warm';
+			break;
+		case 'bl' + 'ue':
+			temperature = 'cold';
+		case 'deep blue':
+			temperature = 'or maybe very cold';
+	} */
+	vm.instructions.push ( new LoadRegister ( 'r1', 'red' ) );
+	vm.instructions.push ( new SetVar ( 'color', 'r1' ) );
+	// get discriminant
+	vm.instructions.push ( new GetVar ( 'color', 'r1' ) );
+	// case 'yellow'
+	vm.instructions.push ( new LoadRegister ( 'r2', 'yellow' ) );
+	vm.instructions.push ( new BinaryOp ( '===', 'r1', 'r2', 'r3' ) );
+	var consequent1Jump = new ConditionalJump ( 'r3', true, -1 );
+	vm.instructions.push ( consequent1Jump );
+	// case 'red'
+	vm.instructions.push ( new LoadRegister ( 'r2', 'red' ) );
+	vm.instructions.push ( new BinaryOp ( '===', 'r1', 'r2', 'r3' ) );
+	vm.instructions.push ( consequent1Jump );
+	// case 'bl' + 'ue'
+	vm.instructions.push ( new LoadRegister ( 'r2', 'bl' ) );
+	vm.instructions.push ( new LoadRegister ( 'r4', 'ue' ) );
+	vm.instructions.push ( new BinaryOp ( '+', 'r2', 'r4', 'r2' ) );
+	vm.instructions.push ( new BinaryOp ( '===', 'r1', 'r2', 'r3' ) );
+	var consequent2Jump = new ConditionalJump ( 'r3', true, -1 );
+	vm.instructions.push ( consequent2Jump );
+	// case 'deep blue'
+	vm.instructions.push ( new LoadRegister ( 'r2', 'deep blue' ) );
+	vm.instructions.push ( new BinaryOp ( '===', 'r1', 'r2', 'r3' ) );
+	var consequent3Jump = new ConditionalJump ( 'r3', true, -1 );
+	vm.instructions.push ( consequent3Jump );
+	// no cases matched, jump to end
+	var switchEndJump = new Jump ( -1 );
+	vm.instructions.push ( switchEndJump );
+	// consequent 1, temperature = 'warm';
+	consequent1Jump.ip = vm.instructions.length;
+	vm.instructions.push ( new LoadRegister ( 'r1', 'warm' ) );
+	vm.instructions.push ( new SetVar ( 'temperature', 'r1' ) );
+	// break;
+	vm.instructions.push ( switchEndJump );
+	// consequent 2, temperature = 'cold';
+	consequent2Jump.ip = vm.instructions.length;
+	vm.instructions.push ( new LoadRegister ( 'r1', 'cold' ) );
+	vm.instructions.push ( new SetVar ( 'temperature', 'r1' ) );
+	// consequent 2, temperature = 'or maybe very cold';
+	consequent3Jump.ip = vm.instructions.length;
+	vm.instructions.push ( new LoadRegister ( 'r1', 'or maybe very cold' ) );
+	vm.instructions.push ( new SetVar ( 'temperature', 'r1' ) );
+	// end
+	switchEndJump.ip = vm.instructions.length;
+	vm.instructions.push ( new Assert ( function ( vm : Jsvm ) {
+		var vars = vm.currentScope.vars,
+			color = vars ['color'],
+			temperature = undefined;
+
+		switch ( color ) {
+			case 'yellow':
+			case 'red':
+				temperature = 'warm';
+				break;
+			case 'bl' + 'ue':
+				temperature = 'cold';
+			case 'deep blue':
+				temperature = 'or maybe very cold';
+		}
+
+		return	vars ['temperature'] === temperature;
+	} ) );
+
+	// TODO: while		DONE
+	// TODO: do while	DONE
+	// TODO: for (;;)	DONE
+	// TODO: for..in	DONE
+	// TODO: if			DONE
+	// TODO: if-else	DONE
+	// TODO: conditional expression	// UPD: seems very similiar to if-else.
+	// TODO: switch		DONE
+
+	while ( vm.ip < vm.instructions.length ) {
+		vm.step ();
+
+		if ( vm.ip >= dbgIp ) {
+			var h = 14;
+		}
+	}
+}
+
+//JsvmTest ();

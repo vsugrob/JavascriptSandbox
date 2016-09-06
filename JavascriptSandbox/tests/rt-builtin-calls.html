@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Runtime builtin calls test</title>
+    <script src="../esprima/esprima.js" type="text/javascript"></script>
+    <script src="../Ast.js"></script>
+    <script src="rt-builtin-calls.js" type="text/javascript"></script>
+    <style type="text/css">
+        #content {
+            margin: 0 auto;
+            max-width : 800px;
+        }
+
+        #builtin-callables {
+            font-family : monospace;
+            overflow: hidden;
+            background: -webkit-linear-gradient(top, white, lightgray);
+            border-bottom: 1px dashed gray;
+            margin : 1em;
+        }
+
+        .builtin-callable {
+            display : block;
+        }
+
+        .element-minimized {
+            max-height : 2em;
+        }
+
+        .examined-item {
+            margin : 0px;
+        }
+
+        .loc {
+            margin-right : 4em;
+            color : limegreen;
+        }
+
+        .code {
+            font-family : monospace;
+        }
+
+        .call-code {
+            background-color : yellow;
+        }
+
+        .array-code {
+            background-color : greenyellow;
+        }
+
+        .object-code {
+            background-color : goldenrod;
+        }
+
+        .member-expr-code {
+            background-color : lightsteelblue;
+        }
+
+        .file {
+            padding-left : 4em;
+        }
+
+        .file-info {
+            background-color : darkorange;
+            color : white;
+            border : 1px solid gray;
+            border-radius : 3px;
+            padding : 0 1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h4>All builtin callables:</h4>
+        <div id="builtin-callables"></div>
+        <h4>Calls:</h4>
+        <div id="calls"></div>
+        <h4>Used builtin callables:</h4>
+        <div id="used-builtin-callables"></div>
+    </div>
+</body>
+</html>

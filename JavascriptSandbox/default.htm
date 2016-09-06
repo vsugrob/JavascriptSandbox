@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Javascript Sandbox</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="codemirror/theme/solarized.css" />
+    <script src="codemirror/lib/codemirror.js"></script>
+    <script src="codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="codemirror/addon/edit/continuecomment.js"></script>
+    <script src="codemirror/mode/javascript/javascript.js"></script>
+
+    <script src="esprima/esprima.js"></script>
+    <script src="esprima/escodegen.browser.js"></script>
+
+    <script src="Ast.js"></script>
+
+    <script src="sandbox.js"></script>
+
+    <link rel="stylesheet" href="WatchWidget.css" />
+    <script src="WatchWidget.js"></script>
+
+    <script src="System.js"></script>
+    <script src="Configuration.js"></script>
+    <script src="Runtime.js"></script>
+    <script src="rst/RstNode.js"></script>
+    <script src="rst/ScopeNode.js"></script>
+    <script src="rst/Identifier.js"></script>
+    <script src="rst/Literal.js"></script>
+    <script src="rst/Program.js"></script>
+    <script src="rst/VariableDeclaration.js"></script>
+    <script src="rst/VariableDeclarator.js"></script>
+    <script src="rst/AssignmentExpression.js"></script>
+    <script src="rst/ExpressionStatement.js"></script>
+    <script src="rst/MemberExpression.js"></script>
+    <script src="rst/UpdateExpression.js"></script>
+    <script src="rst/BinaryExpression.js"></script>
+    <script src="rst/LogicalExpression.js"></script>
+    <script src="rst/ThisExpression.js"></script>
+    <script src="rst/SequenceExpression.js"></script>
+    <script src="rst/UnaryExpression.js"></script>
+    <script src="rst/ArrayExpression.js"></script>
+    <script src="rst/ObjectExpression.js"></script>
+    <script src="rst/Property.js"></script>
+    <script src="rst/BlockStatement.js"></script>
+    <script src="rst/DoWhileStatement.js"></script>
+    <script src="rst/WhileStatement.js"></script>
+    <script src="rst/LabeledStatement.js"></script>
+    <script src="rst/BreakStatement.js"></script>
+    <script src="rst/ContinueStatement.js"></script>
+    <script src="rst/EmptyStatement.js"></script>
+    <script src="rst/ForStatement.js"></script>
+    <script src="rst/ForInStatement.js"></script>
+    <script src="rst/IfStatement.js"></script>
+    <script src="rst/ConditionalExpression.js"></script>
+    <script src="rst/SwitchStatement.js"></script>
+    <script src="rst/SwitchCase.js"></script>
+    <script src="rst/InvocationNode.js"></script>
+    <script src="rst/CallExpression.js"></script>
+    <script src="rst/NewExpression.js"></script>
+    <script src="rst/FunctionNode.js"></script>
+    <script src="rst/FunctionExpression.js"></script>
+    <script src="rst/FunctionDeclaration.js"></script>
+    <script src="rst/ReturnStatement.js"></script>
+    <script src="rst/ThrowStatement.js"></script>
+    <script src="rst/TryStatement.js"></script>
+    <script src="rst/CatchClause.js"></script>
+    <script src="rst/WithStatement.js"></script>
+    <script src="rst/RstBuilder.js"></script>
+    <script src="RuntimeScope.js"></script>
+    <script src="StackFrame.js"></script>
+
+    <script src="syntax/lexer/TokenType.js"></script>
+    <script src="syntax/lexer/Token.js"></script>
+    <script src="syntax/lexer/NumericTokenKind.js"></script>
+    <script src="syntax/lexer/NumericToken.js"></script>
+    <script src="syntax/lexer/StringTokenKind.js"></script>
+    <script src="syntax/lexer/StringToken.js"></script>
+    <script src="syntax/lexer/IdentifierKind.js"></script>
+    <script src="syntax/lexer/IdentifierToken.js"></script>
+    <script src="syntax/lexer/RegexToken.js"></script>
+    <script src="syntax/lexer/Punctuator.js"></script>
+    <script src="syntax/lexer/PunctuatorToken.js"></script>
+    <script src="syntax/lexer/CommentNode.js"></script>
+    <script src="syntax/lexer/Lexer.js"></script>
+    <script src="syntax/parser/Parser.js"></script>
+    <script src="syntax/parser/StatementParser.js"></script>
+    <script src="syntax/parser/OpPrecedence.js"></script>
+    <script src="syntax/parser/ExpressionParser.js"></script>
+    <script src="syntax/parser/FunctionParser.js"></script>
+    <script src="syntax/parser/DefaultAstBuilder.js"></script>
+
+    <script src="app.js"></script>
+    <style type="text/css">
+		body {
+			margin : 0px auto;
+			max-width : 1000px;
+		}
+
+        .CodeMirror {
+            font-size : 10pt;
+        }
+
+        .cm-s-solarized.cm-s-light .CodeMirror-selected {
+            background : #D9D9D9;
+        }
+
+        .cm-s-solarized.cm-s-light {
+            text-shadow : none;
+        }
+
+        .cm-s-solarized .cm-tab:before {
+            content : none;
+        }
+
+        #code-editor .CodeMirror {
+            height : 500px;
+        }
+
+        #console-editor .CodeMirror {
+            height : 28px;
+        }
+
+        .input-mark {
+            float : left;
+        }
+
+        .output-mark {
+            float : left;
+        }
+
+        .console-executed-code {
+            background-color : transparent !important;
+        }
+
+        .console-executed-code pre {
+            margin : 0px;
+            line-height : normal;
+        }
+
+        .exec-error {
+            background: url(img/error.png) top left no-repeat;
+            background-size: 1em 1em;
+            padding-left: 1.5em;
+            color: red;
+            max-width: 40em;
+            white-space : normal;
+        }
+	</style>
+</head>
+<body>
+<div>
+    <a href="tests/test262/website/default.html">tests/test262</a>
+    <a href="tests/rt-builtin-calls.html">tests/rt-builtin-calls</a>
+    <a href="tests/parser/parser.html">tests/parser</a>
+    <a href="tools/calc-token-rates.html">tools/calc-token-rates</a>
+    <a href="tools/classify-identifiers.html">tools/classify-identifiers</a>
+    <a href="tools/parser-comarison/test/compare.html">tools/parser-comarison</a>
+    <div id="code-editor">
+        <textarea id="cm-code"></textarea>
+    </div>
+
+    <div style="width : 50%; height : 400px; overflow : scroll; float : left;">
+        <h4>Guest log:</h4>
+        <pre id="guest-log"></pre>
+        <div id="console-editor">
+            <textarea id="cm-console"></textarea>
+        </div>
+    </div>
+    
+    <div style="width : 50%; height : 400px; overflow : scroll; float : left;">
+        <h4>Guest user-defined globals:</h4>
+        <button id="toggle-enabled">enable/disable</button>
+        <button id="terminate-sandbox">terminate Sandbox</button>
+        <pre id="guest-globals"></pre>
+    </div>
+
+    <div style="color : gray; position : absolute; left : 0px; top : 0px;">
+        TODO:
+        <ul>
+            <li>Console.</li>
+            <li>Implement hierarchical watch ui for variables<br /> and expression evaluation results.</li>
+            <li>User-defined watch expressions.</li>
+            <li>Improve guest globals syntax.<span style="color : green;">done using esprima</span></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+﻿enum TokenType;
+class Token;
+class Lexer {
+	source : string;
+	index : number;
+	current : Token;
+	// method to read next token
+}
+class Parser {
+	lexer : Lexer;
+	parse () {
+		// Relies on StatementParser and ExpressionParser.
+	}
+}
+static class StatementParser;
+static class ExpressionParser;

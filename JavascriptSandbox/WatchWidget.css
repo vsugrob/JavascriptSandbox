@@ -1,0 +1,176 @@
+﻿.no-text-select {
+    -moz-user-select : none;
+    -webkit-user-select : none;
+    -ms-user-select : none;
+    user-select : none;
+}
+
+.watch .property-label {
+    color : #268bd2;
+    cursor : pointer;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.watch .property-label.prototype-label {
+    color : #cb4b16;
+}
+
+.watch .property-label.non-enumerable {
+    color : #4C687C;
+}
+
+.watch .property-attributes {
+    font-size : 0.75em;
+    vertical-align : top;
+    color : #283B77;
+}
+
+.watch .reflected-value {
+    display : inline-block;
+}
+
+.watch.unsubstantial .reflected-value {
+    color : #9E9E9E;
+}
+
+.watch .reflected-type {
+    color : #b58900;
+    cursor : default;
+    vertical-align : top;
+}
+
+.watch.unsubstantial .reflected-type {
+    color : #9E9E9E;
+}
+
+.watch .type-String {
+    color : #859900;
+}
+
+.watch .type-Number {
+    color : #d33682;
+}
+
+.watch .type-Null, .type-Boolean, .type-Undefined {
+    color : #cb4b16;
+}
+
+/* TODO: colouring for RegExp type. */
+
+.watch .value-error {
+    background: url(img/error.png) top left no-repeat;
+    background-size: 1em 1em;
+    padding-left: 1.5em;
+    color: red;
+    max-width: 40em;
+    white-space : normal;
+}
+
+.watch *[contenteditable="true"].reflected-value:focus {
+    color : black;
+}
+
+.expander-button {
+    cursor : pointer;
+    background-repeat : no-repeat;
+    display : inline;
+    float : left;
+    width : 12px;
+}
+
+.watch-open .expander-button {
+    background-image: url(img/expander-open.png);
+}
+
+.watch-closed .expander-button {
+    background-image: url(img/expander-closed.png);
+}
+
+.element-hidden {
+    visibility : hidden;
+}
+
+.element-collapsed {
+    display : none !important;
+}
+
+.element-disabled {
+    opacity : 0.7;
+    -webkit-filter : grayscale(1);
+}
+
+.element-clickable {
+    cursor : pointer;
+}
+
+.reflected-value[contenteditable="true"]:hover, .reflected-value[contenteditable="true"]:focus {
+    position : relative;
+    z-index : 1692;
+}
+
+.watch *[contenteditable="true"]:hover {
+    outline : 1px solid yellowgreen;
+}
+
+.watch *[contenteditable="true"]:focus {
+    outline : 1px solid lightgreen;
+}
+
+.watch *[contenteditable="true"].presumably-read-only:hover {
+    outline : 1px solid gray;
+}
+
+.watch *[contenteditable="true"].presumably-read-only:focus {
+    outline : 1px solid darkgray;
+}
+
+.watch-details {
+    margin: 0px;
+    padding-left: 1em;
+}
+
+.watch-open .watch-details {
+    display : block;
+}
+
+.watch-closed .watch-details {
+    display : none;
+}
+
+.watch-header {
+}
+
+.watch-auto-update {
+}
+
+.widget-error {
+    background: url(img/error.png) top left no-repeat;
+    background-size: 1em 1em;
+    padding-left: 1.5em;
+    color: red;
+    max-width: 40em;
+    white-space : normal;
+}
+
+@keyframes updated-element-fadeout { from { background: #ECC548; } }
+@-webkit-keyframes updated-element-fadeout { from { background: #ECC548; } }
+
+.updated-element {
+    background-color : #FDD8A7;
+    animation : updated-element-fadeout 1s;
+    animation-timing-function : ease-out;
+    -webkit-animation : updated-element-fadeout 1s;
+    -webkit-animation-timing-function : ease-out;
+}
+
+@keyframes update-rejected-element-fadeout { from { background: #FFA299; } }
+@-webkit-keyframes update-rejected-element-fadeout { from { background: #FFA299; } }
+
+.update-rejected-element {
+    background-color : #FFC1BB;
+    animation : update-rejected-element-fadeout 1s;
+    animation-timing-function : ease-out;
+    -webkit-animation : update-rejected-element-fadeout 1s;
+    -webkit-animation-timing-function : ease-out;
+}

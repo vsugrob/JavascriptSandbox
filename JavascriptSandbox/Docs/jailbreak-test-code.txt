@@ -1,0 +1,20 @@
+﻿try { var f = new Function ( 'console.log ( this );' );
+f (); } catch ( ex ) { console.log ( ex ); }
+function func () { console.log ( this ); }
+func.call ( null );
+var a = [];
+console.log ( 'hello from guest code' );
+a.constructor.prototype.splice = function () { console.error ( 'Jailbreak1!' ); };
+//a.constructor.prototype.constructor = null;
+var o = {};
+var i = 0;
+o.constructor.getOwnPropertyNames = function () { console.error ( 'Jailbreak2!' ); };
+Object.defineProperty ( Object, 'freeze', {
+ set : function () {
+  console.log ( 'Jailbreak! (freeze)' );
+ }
+} );
+try { Function.prototype.bind = function () { console.error ( 'Jailbreak3!' ); }; } catch ( ex ) { console.log ( ex ); }
+var rnd = Math.random ();
+var Bot = function () { this.works = a; };
+Bot.prototype.hi = function ( p1, p2 ) { console.log ( 'hi ' + p1 + ' and ' + p2 ); };

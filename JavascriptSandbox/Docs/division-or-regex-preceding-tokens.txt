@@ -1,0 +1,313 @@
+﻿_______________________________
+// 1) Punctuator preceding '/':
+enum Punctuator {
+	LCurly,			//  {		r
+	RCurly,			//  }		/ or r
+	LParen,			//  (		r
+	RParen,			//  )		/ or r
+	LBracket,		//  [		r
+	RBracket,		//  ]		/
+	Dot,			//  .		/ though UNEXPECTED
+	Semicolon,		//  ;		r
+	Comma,			//  ,		r
+	Lt,				//  <		r
+	Gt,				//  >		r
+	LtOrEq,			//  <=		r
+	GtOrEq,			//  >=		r
+	Eq,				//  ==		r
+	NotEq,			//  !=		r
+	StrictEq,		//  ===		r
+	StrictNotEq,	//  !==		r
+	Plus,			//  +		r
+	Minus,			//  -		r
+	Multiply,		//  *		r
+	Modulo,			//  %		r
+	Increase,		//  ++		/ or r	// TODO: consider prefix and post forms separately!
+	Decrease,		//  --		/ or r	// TODO: consider prefix and post forms separately!
+	LShift,			//  <<		r
+	RShift,			//  >>		r
+	URShift,		//  >>>		r
+	BitAnd,			//  &		r
+	BitOr,			//  |		r
+	BitXor,			//  ^		r
+	Not,			//  !		r
+	BitNot,			//  ~		r
+	And,			//  &&		r
+	Or,				//  ||		r
+	Question,		//  ?		r
+	Colon,			//  :		r
+	Assign,			//  =		r
+	PlusAssign,		//  +=		r
+	MinusAssign,	//  -=		r
+	MultiplyAssign,	//  *=		r
+	ModuloAssign,	//  %=		r
+	LShiftAssign,	//  <<=		r
+	RShiftAssign,	//  >>=		r
+	URShiftAssign,	//  >>>=	r
+	BitAndAssign,	//  &=		r
+	BitOrAssign,	//  |=		r
+	BitXorAssign,	//  ^=		r
+	Divide,			//  /		r
+	DivideAssign,	//  /=		r
+}
+
+__________________________________
+// 2) Reserved word preceding '/':
+Reserved words:
+break			/ though UNEXPECTED
+case			r
+catch			/ though UNEXPECTED
+class			/ though UNEXPECTED
+const			/ though UNEXPECTED
+continue		/ though UNEXPECTED
+debugger		/ though UNEXPECTED
+default			/ though UNEXPECTED
+delete			r
+do				r
+else			r
+enum			/ though UNEXPECTED
+export			/ though UNEXPECTED
+extends			/ though UNEXPECTED
+false			/
+finally			/ though UNEXPECTED
+for				/ though UNEXPECTED
+function		/ though UNEXPECTED
+if				/ though UNEXPECTED
+implements		/ though UNEXPECTED
+import			/ though UNEXPECTED
+in				r
+instanceof		r
+interface		/ though UNEXPECTED
+let				/ though UNEXPECTED
+new				r
+null			/
+package			/ though UNEXPECTED
+private			/ though UNEXPECTED
+protected		/ though UNEXPECTED
+public			/ though UNEXPECTED
+return			r
+static			/ though UNEXPECTED
+super			/
+switch			/ though UNEXPECTED
+this			/
+throw			r
+true			/
+try				/ though UNEXPECTED
+typeof			r
+var				/ though UNEXPECTED
+void			r
+while			/ though UNEXPECTED
+with			/ though UNEXPECTED
+yield			r
+
+// TODO: sections below aren't used anymore.
+__________________________________________________
+// 3) Punctuator preceding 'function name () {}/':
+enum Punctuator {
+	LCurly,			//  {		r
+	RCurly,			//  }		r	even when '}' is last char of expression there will be automatically inserted semicolon.
+	LParen,			//  (		/
+	RParen,			//  )		r	even when ')' is last char of expression there will be automatically inserted semicolon.
+	LBracket,		//  [		/
+	RBracket,		//  ]		r
+	Dot,			//  .		/ though UNEXPECTED
+	Semicolon,		//  ;		r
+	Comma,			//  ,		/
+	Lt,				//  <		/
+	Gt,				//  >		/
+	LtOrEq,			//  <=		/
+	GtOrEq,			//  >=		/
+	Eq,				//  ==		/
+	NotEq,			//  !=		/
+	StrictEq,		//  ===		/
+	StrictNotEq,	//  !==		/
+	Plus,			//  +		/
+	Minus,			//  -		/
+	Multiply,		//  *		/
+	Modulo,			//  %		/
+	Increase,		//  ++		it depends
+	Decrease,		//  --		it depends
+	LShift,			//  <<		/
+	RShift,			//  >>		/
+	URShift,		//  >>>		/
+	BitAnd,			//  &		/
+	BitOr,			//  |		/
+	BitXor,			//  ^		/
+	Not,			//  !		/
+	BitNot,			//  ~		/
+	And,			//  &&		/
+	Or,				//  ||		/
+	Question,		//  ?		/
+	Colon,			//  :		solve 'a:{b:' problem
+	Assign,			//  =		/
+	PlusAssign,		//  +=		/
+	MinusAssign,	//  -=		/
+	MultiplyAssign,	//  *=		/
+	ModuloAssign,	//  %=		/
+	LShiftAssign,	//  <<=		/
+	RShiftAssign,	//  >>=		/
+	URShiftAssign,	//  >>>=	/
+	BitAndAssign,	//  &=		/
+	BitOrAssign,	//  |=		/
+	BitXorAssign,	//  ^=		/
+	Divide,			//  /		/
+	DivideAssign,	//  /=		/
+}
+
+_____________________________________________________
+// 4) Reserved word preceding 'function name () {}/':
+Reserved words:
+break			/ if on same line, r otherwise
+case			/
+catch			r though UNEXPECTED
+class			r though UNEXPECTED
+const			r though UNEXPECTED
+continue		/ if on same line, r otherwise
+debugger		r though UNEXPECTED
+default			r though UNEXPECTED
+delete			/
+do				r
+else			r
+enum			r though UNEXPECTED
+export			r though UNEXPECTED
+extends			r though UNEXPECTED
+false			r
+finally			r though UNEXPECTED
+for				r though UNEXPECTED
+function		r though UNEXPECTED
+if				r though UNEXPECTED
+implements		r though UNEXPECTED
+import			r though UNEXPECTED
+in				/
+instanceof		/
+interface		r though UNEXPECTED
+let				r though UNEXPECTED
+new				/
+null			r
+package			r though UNEXPECTED
+private			r though UNEXPECTED
+protected		r though UNEXPECTED
+public			r though UNEXPECTED
+return			/ if on same line, r otherwise
+static			r though UNEXPECTED
+super			r
+switch			r though UNEXPECTED
+this			r
+throw			/ if on same line, r otherwise
+true			r
+try				r though UNEXPECTED
+typeof			/
+var				r though UNEXPECTED
+void			/
+while			r though UNEXPECTED
+with			r though UNEXPECTED
+yield			/ if on same line, r otherwise
+
+_________________________________
+// 5) Punctuator preceding '{}/':
+enum Punctuator {
+	LCurly,			//  {		r
+	RCurly,			//  }		r	even when '}' is last char of expression there will be automatically inserted semicolon.
+	LParen,			//  (		/
+	RParen,			//  )		r	even when ')' is last char of expression there will be automatically inserted semicolon.
+	LBracket,		//  [		/
+	RBracket,		//  ]		r
+	Dot,			//  .		/ though UNEXPECTED
+	Semicolon,		//  ;		r
+	Comma,			//  ,		/
+	Lt,				//  <		/
+	Gt,				//  >		/
+	LtOrEq,			//  <=		/
+	GtOrEq,			//  >=		/
+	Eq,				//  ==		/
+	NotEq,			//  !=		/
+	StrictEq,		//  ===		/
+	StrictNotEq,	//  !==		/
+	Plus,			//  +		/
+	Minus,			//  -		/
+	Multiply,		//  *		/
+	Modulo,			//  %		/
+	Increase,		//  ++		it depends
+	Decrease,		//  --		it depends
+	LShift,			//  <<		/
+	RShift,			//  >>		/
+	URShift,		//  >>>		/
+	BitAnd,			//  &		/
+	BitOr,			//  |		/
+	BitXor,			//  ^		/
+	Not,			//  !		/
+	BitNot,			//  ~		/
+	And,			//  &&		/
+	Or,				//  ||		/
+	Question,		//  ?		/
+	Colon,			//  :		solve 'a:{b:' problem
+	Assign,			//  =		/
+	PlusAssign,		//  +=		/
+	MinusAssign,	//  -=		/
+	MultiplyAssign,	//  *=		/
+	ModuloAssign,	//  %=		/
+	LShiftAssign,	//  <<=		/
+	RShiftAssign,	//  >>=		/
+	URShiftAssign,	//  >>>=	/
+	BitAndAssign,	//  &=		/
+	BitOrAssign,	//  |=		/
+	BitXorAssign,	//  ^=		/
+	Divide,			//  /		/
+	DivideAssign,	//  /=		/
+}
+
+____________________________________
+// 6) Reserved word preceding '{}/':
+Reserved words:
+break			/ if on same line, r otherwise
+case			/
+catch			r though UNEXPECTED
+class			r though UNEXPECTED
+const			r though UNEXPECTED
+continue		/ if on same line, r otherwise
+debugger		r though UNEXPECTED
+default			r though UNEXPECTED
+delete			/
+do				r
+else			r
+enum			r though UNEXPECTED
+export			r though UNEXPECTED
+extends			r though UNEXPECTED
+false			r
+finally			r
+for				r though UNEXPECTED
+function		r though UNEXPECTED
+if				r though UNEXPECTED
+implements		r though UNEXPECTED
+import			r though UNEXPECTED
+in				/
+instanceof		/
+interface		r though UNEXPECTED
+let				r though UNEXPECTED
+new				/
+null			r
+package			r though UNEXPECTED
+private			r though UNEXPECTED
+protected		r though UNEXPECTED
+public			r though UNEXPECTED
+return			/ if on same line, r otherwise
+static			r though UNEXPECTED
+super			r
+switch			r though UNEXPECTED
+this			r
+throw			/ if on same line, r otherwise
+true			r
+try				r though UNEXPECTED
+typeof			/
+var				r though UNEXPECTED
+void			/
+while			r though UNEXPECTED
+with			r though UNEXPECTED
+yield			/ if on same line, r otherwise
+
+____________________________
+// 7) Note about 3, 4, 5, 6:
+It can be noticed that table 3 is the same as table 5 and
+table 5 has only one negligible difference with table 6.
+TODO: this similiarity was considered before '++', '--' and ':'
+  problems solved. I don't know whether they can affect this similarity.

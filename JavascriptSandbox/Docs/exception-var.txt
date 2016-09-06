@@ -1,0 +1,79 @@
+﻿Fact 1:
+	try {
+	  throw 'hehe';
+	} catch ( ex ) {
+	  var ex = 5;
+	  var b = 4;
+	  console.log ( 'ex in catch: ' + ex + ', b in catch: ' + b );
+	}
+	console.log ( 'ex out of catch: ' + ex + ', b out of catch: ' + b );
+Output:
+	ex in catch: 5, b in catch: 4
+	ex out of catch: undefined, b out of catch: 4
+Conclusion:
+	Variable with the same name as exception variable is not defined outside of catch block.
+UPDATE:
+	No, variable IS defined. If it wasn't defined, instead of second line of output we would get
+	ReferenceError: ex is not defined.
+
+Fact 2:
+	var ex = 3;
+	try {
+	  throw 'hehe';
+	} catch ( ex ) {
+	  var ex = 5;
+	  var b = 4;
+	  console.log ( 'ex in catch: ' + ex + ', b in catch: ' + b );
+	}
+Output:
+	console.log ( 'ex out of catch: ' + ex + ', b out of catch: ' + b );
+	ex in catch: 5, b in catch: 4
+	ex out of catch: 3, b out of catch: 4
+Conclusion:
+	Variable declaration inside of catch block and having the same name as exception variable is IGNORED.
+UPDATE:
+	No, see update section in Fact 1.
+
+Fact 3:
+	try {
+	  throw 'hehe';
+	} catch ( ex ) {
+	  function ex () {}
+	  console.log ( 'ex in catch: ' + ex );
+	}
+	console.log ( 'ex out of catch: ' + ex );
+Output:
+	ex in catch: hehe
+	ex out of catch: function ex() {}
+Conclusion:
+	Function declaration with the same name as exception variable still defined outside of catch block.
+	Inside the catch block, however, exception var is defined with the value of exception.
+
+Fact 4:
+	try {
+	  throw 'hehe';
+	} catch ( ex2 ) {
+	  function f () {
+		console.log ( ex2 );
+	  }
+	}
+	f ();
+Output:
+	ReferenceError: ex2 is not defined
+Conclusion:
+	Function instantiated at the beginning of the code, thus 'f' forks not the exception scope, but its parent scope.
+	As a consequence, ex2 is not accessible.
+
+Fact 5:
+	try {
+	  throw 'hehe';
+	} catch ( ex2 ) {
+	  var myf = function f () {
+		console.log ( ex2 );
+	  }
+	}
+	myf ();
+Output:
+	hehe
+Conclusion:
+	Function myf forks exception scope and therefore ex2 is accessible from its body.

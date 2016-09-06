@@ -1,0 +1,17 @@
+﻿ArrayExpression			-
+Identifier				-
+Literal					-
+ThisExpression			-
+FunctionExpression		-
+ObjectExpression		-
+
+MemberExpression		1 (or 0? what about 'new a.b', here 'new' and '.' can't have same precedence)
+NewExpression			1
+CallExpression			2
+UpdateExpression		3
+UnaryExpression			4
+BinaryExpression		5-12
+LogicalExpression		13-14
+ConditionalExpression	15
+AssignmentExpression	17
+SequenceExpression		18

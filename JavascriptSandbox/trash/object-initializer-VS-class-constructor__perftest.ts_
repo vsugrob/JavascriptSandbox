@@ -1,0 +1,51 @@
+﻿function profile ( work : Function, header : string, times = 10 ) {
+	var timeStart = Date.now ();
+
+	for ( var i = 0 ; i < times ; i++ ) {
+		work ();
+	}
+
+	var timeEnd = Date.now (),
+		profilingTimeElapsed = ( timeEnd - timeStart ) / 1000;
+
+	console.log ( header + ': ' + profilingTimeElapsed + 'sec' );
+}
+
+function testObjectInitializer () {
+	var data = [];
+
+	for ( var i = 0 ; i < 1000 ; i++ ) {
+		var obj = {
+			i : i,
+			iStr : i + '',
+			iStrLen : ( i + '' ).length
+		};
+
+		data.push ( obj );
+	}
+}
+
+class TestClass {
+	constructor (
+		public i : number,
+		public iStr : string,
+		public iStrLen : number
+	) {}
+}
+
+function testClassConstructor () {
+	var data = [];
+
+	for ( var i = 0 ; i < 1000 ; i++ ) {
+		var obj = new TestClass (
+			i,
+			i + '',
+			( i + '' ).length
+		);
+
+		data.push ( obj );
+	}
+}
+
+profile ( testObjectInitializer, 'object initializer', 1000 );
+profile ( testClassConstructor, 'class constructor', 1000 );

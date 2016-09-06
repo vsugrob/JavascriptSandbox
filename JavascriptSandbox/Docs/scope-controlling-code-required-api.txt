@@ -1,0 +1,16 @@
+setVar ( varName, value )
+//assignBy ( varName, delta, operator )
+// NOTE: assignBy performs wrong order of read/write ops, that's why we use get/set operations instead.
+// setVar ( <varName>, getVar ( <varName> ) <binOperator> <delta> );
+hasOwnVar ( varName )
+getVar ( varName )
+defVar ( varName, value )
+deleteVar ( varName )
+//initFuncScope ( funcName, funcInstance, defFuncName, varNames, argNames, argValues, funcNames, funcInstances )
+// NOTE: initFuncScope is overcomplicated since we can obtain most of the information about function from FunctionNode
+// retrieved by function fullName.
+initFuncScope ( funcInstance : Function, thisObj : any, argValues : any [] )
+setupInstance ( funcInstance, fullName )
+createObj ( obj, getProps, setProps ) where getProps and setProps are arrays of type <{key : string; func : Function} []>
+initRootScope ()
+updateVar ( varName, operator, prefix )

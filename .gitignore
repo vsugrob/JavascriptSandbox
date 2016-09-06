@@ -1,0 +1,17 @@
+.vs/
+*.suo
+*.js.map
+JavascriptSandbox/obj/
+JavascriptSandbox/bin/
+JavascriptSandbox/tools/GenLexerRegex/bin/
+JavascriptSandbox/tools/GenLexerRegex/obj/
+JavascriptSandbox/*.js
+JavascriptSandbox/rst/*.js
+JavascriptSandbox/syntax/lexer/*.js
+JavascriptSandbox/syntax/mozilla/*.js
+JavascriptSandbox/syntax/parser/*.js
+JavascriptSandbox/syntax/*.js
+JavascriptSandbox/tests/parser/*.js
+JavascriptSandbox/tests/*.js
+JavascriptSandbox/tests/test262/*.js
+JavascriptSandbox/tools/*.js
